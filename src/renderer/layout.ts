@@ -186,6 +186,7 @@ export function getSectionAbbreviation(section: Section): string {
 /**
  * Calculate the complete layout for a song.
  * Positions all sections across pages and columns.
+ * Sections are NEVER split - they always stay together.
  */
 export function calculateLayout(
   song: Song,
@@ -194,43 +195,34 @@ export function calculateLayout(
   const contentArea = calculateContentArea(config);
   const layoutSections: LayoutSection[] = [];
 
-  // Track current position in each column
+  // Track current position
   let page = 0;
   let column = 0;
   let columnY = 0;
+
+  // Helper to advance to next column or page
+  const advanceColumn = () => {
+    if (column === 0) {
+      column = 1;
+      columnY = 0;
+    } else {
+      page++;
+      column = 0;
+      columnY = 0;
+    }
+  };
 
   for (let i = 0; i < song.sections.length; i++) {
     const section = song.sections[i];
     const sectionHeight = calculateSectionHeight(section, config);
 
-    // Check if section fits in current column
-    if (columnY + sectionHeight > contentArea.height) {
-      // Move to next column or page
-      if (column === 0) {
-        // Move to second column
-        column = 1;
-        columnY = 0;
-      } else {
-        // Move to next page
-        page++;
-        column = 0;
-        columnY = 0;
-      }
+    // If section doesn't fit in remaining space, move to next column/page
+    // Exception: if we're at the top of a column, place it anyway (section is just tall)
+    if (columnY > 0 && columnY + sectionHeight > contentArea.height) {
+      advanceColumn();
     }
 
-    // Check again after potential column/page change
-    if (columnY + sectionHeight > contentArea.height && columnY > 0) {
-      // Section is too tall for remaining space, start fresh
-      if (column === 0) {
-        column = 1;
-        columnY = 0;
-      } else {
-        page++;
-        column = 0;
-        columnY = 0;
-      }
-    }
-
+    // Place the section
     layoutSections.push({
       sectionIndex: i,
       column,
@@ -239,7 +231,14 @@ export function calculateLayout(
       page
     });
 
+    // Advance Y position
     columnY += sectionHeight + config.spacing.betweenSections;
+
+    // If we've exceeded column height after placing, next section goes to new column
+    // (This handles the case where a section exactly fills or slightly exceeds)
+    if (columnY >= contentArea.height) {
+      advanceColumn();
+    }
   }
 
   return {

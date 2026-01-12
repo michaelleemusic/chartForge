@@ -148,18 +148,14 @@ function renderLine(
     currentY += config.fonts.chordRoot.size * config.fonts.chordRoot.lineHeight;
 
   } else if (hasChords && hasLyrics) {
-    // Chords above lyrics
+    // Chords above lyrics - renders both with stretched spacing
     const chordY = currentY + config.fonts.chordRoot.size;
-    renderChordsAboveLyrics(ctx, line.chords, line.lyrics!, x, chordY, config);
     currentY += config.fonts.chordRoot.size * config.fonts.chordRoot.lineHeight;
     currentY += config.spacing.chordToLyric;
+    const lyricY = currentY;
 
-    // Lyrics
-    ctx.font = `${config.fonts.lyrics.weight} ${config.fonts.lyrics.size}px ${config.fonts.lyrics.family}`;
-    ctx.fillStyle = config.colors.textSecondary;
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'top';
-    ctx.fillText(line.lyrics!, x, currentY);
+    // Render chords and stretched lyrics together
+    renderChordsAboveLyrics(ctx, line.chords, line.lyrics!, x, chordY, lyricY, config);
     currentY += config.fonts.lyrics.size * config.fonts.lyrics.lineHeight;
 
   } else if (hasLyrics) {

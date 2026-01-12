@@ -458,19 +458,24 @@ Jesus Yours [Ab2]is the victory [Bbadd4]
         let column = 0;
         let columnY = 0;
 
+        const advanceColumn = () => {
+          if (column === 0) {
+            column = 1;
+            columnY = 0;
+          } else {
+            page++;
+            column = 0;
+            columnY = 0;
+          }
+        };
+
         for (let i = 0; i < this.song.sections.length; i++) {
           const section = this.song.sections[i];
           const sectionHeight = this.calculateSectionHeight(section);
 
-          if (columnY + sectionHeight > columnHeight) {
-            if (column === 0) {
-              column = 1;
-              columnY = 0;
-            } else {
-              page++;
-              column = 0;
-              columnY = 0;
-            }
+          // If section doesn't fit and we're not at top, move to next column/page
+          if (columnY > 0 && columnY + sectionHeight > columnHeight) {
+            advanceColumn();
           }
 
           sections.push({
@@ -482,6 +487,11 @@ Jesus Yours [Ab2]is the victory [Bbadd4]
           });
 
           columnY += sectionHeight + this.config.spacing.betweenSections;
+
+          // If exceeded column height, next section goes to new column
+          if (columnY >= columnHeight) {
+            advanceColumn();
+          }
         }
 
         return {
@@ -771,17 +781,13 @@ Jesus Yours [Ab2]is the victory [Bbadd4]
           currentY += config.fonts.chordRoot.size * config.fonts.chordRoot.lineHeight;
 
         } else if (hasChords && hasLyrics) {
-          // Chords above lyrics
+          // Chords above lyrics - renders both with stretched spacing
           const chordY = currentY + config.fonts.chordRoot.size;
-          this.renderChordsAboveLyrics(ctx, line.chords, line.lyrics, x, chordY);
           currentY += config.fonts.chordRoot.size * config.fonts.chordRoot.lineHeight;
           currentY += config.spacing.chordToLyric;
+          const lyricY = currentY;
 
-          ctx.font = `${config.fonts.lyrics.weight} ${config.fonts.lyrics.size}px ${config.fonts.lyrics.family}`;
-          ctx.fillStyle = config.colors.textSecondary;
-          ctx.textAlign = 'left';
-          ctx.textBaseline = 'top';
-          ctx.fillText(line.lyrics, x, currentY);
+          this.renderChordsAboveLyrics(ctx, line.chords, line.lyrics, x, chordY, lyricY);
           currentY += config.fonts.lyrics.size * config.fonts.lyrics.lineHeight;
 
         } else if (hasLyrics) {
@@ -861,14 +867,66 @@ Jesus Yours [Ab2]is the victory [Bbadd4]
         }
       }
 
-      renderChordsAboveLyrics(ctx, chordPositions, lyrics, x, chordY) {
+      renderChordsAboveLyrics(ctx, chordPositions, lyrics, x, chordY, lyricY) {
         const config = this.config;
+
+        // Sort by position
+        const sorted = [...chordPositions].sort((a, b) => a.position - b.position);
+
         ctx.font = `${config.fonts.lyrics.weight} ${config.fonts.lyrics.size}px ${config.fonts.lyrics.family}`;
 
-        for (const cp of chordPositions) {
-          const prefix = lyrics.substring(0, cp.position);
-          const prefixWidth = ctx.measureText(prefix).width;
-          this.renderChord(ctx, cp.chord, x + prefixWidth, chordY);
+        const minGap = 8;
+        const positions = [];
+        const segments = [];
+        let currentX = x;
+
+        // Calculate positions with overlap prevention
+        for (let i = 0; i < sorted.length; i++) {
+          const cp = sorted[i];
+          const prevPos = i === 0 ? 0 : sorted[i - 1].position;
+          const segmentText = lyrics.substring(prevPos, cp.position);
+
+          if (segmentText) {
+            segments.push({ text: segmentText, xPos: currentX });
+            currentX += ctx.measureText(segmentText).width;
+          }
+
+          const chordWidth = this.measureChordWidth(ctx, cp.chord);
+
+          // Check overlap with previous chord
+          if (positions.length > 0) {
+            const prev = positions[positions.length - 1];
+            const minX = prev.xPos + prev.width + minGap;
+            if (currentX < minX) {
+              currentX = minX;
+            }
+          }
+
+          positions.push({ chord: cp.chord, xPos: currentX, width: chordWidth });
+        }
+
+        // Add remaining lyrics
+        if (sorted.length > 0) {
+          const lastPos = sorted[sorted.length - 1].position;
+          const remaining = lyrics.substring(lastPos);
+          if (remaining) {
+            segments.push({ text: remaining, xPos: currentX });
+          }
+        }
+
+        // Render chords
+        for (const p of positions) {
+          this.renderChord(ctx, p.chord, p.xPos, chordY);
+        }
+
+        // Render stretched lyrics
+        ctx.font = `${config.fonts.lyrics.weight} ${config.fonts.lyrics.size}px ${config.fonts.lyrics.family}`;
+        ctx.fillStyle = config.colors.textSecondary;
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'top';
+
+        for (const seg of segments) {
+          ctx.fillText(seg.text, seg.xPos, lyricY);
         }
       }
 

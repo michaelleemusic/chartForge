@@ -124,7 +124,93 @@ export function renderChordRow(
 }
 
 /**
- * Render chords above a lyric line at their respective positions.
+ * Result of laying out chords above lyrics.
+ * Contains adjusted chord positions and stretched lyrics.
+ */
+export interface ChordLyricLayout {
+  chordPositions: { chord: Chord; xPos: number }[];
+  lyricSegments: { text: string; xPos: number }[];
+}
+
+/**
+ * Calculate chord positions and stretch lyrics to prevent overlap.
+ * Returns layout info for both chords and lyrics.
+ */
+export function layoutChordsAndLyrics(
+  ctx: CanvasRenderingContext2D,
+  chords: { chord: Chord; position: number }[],
+  lyrics: string,
+  x: number,
+  config: RenderConfig = DEFAULT_CONFIG
+): ChordLyricLayout {
+  if (chords.length === 0) {
+    return {
+      chordPositions: [],
+      lyricSegments: [{ text: lyrics, xPos: x }]
+    };
+  }
+
+  // Sort chords by position
+  const sortedChords = [...chords].sort((a, b) => a.position - b.position);
+
+  ctx.font = `${config.fonts.lyrics.weight} ${config.fonts.lyrics.size}px ${config.fonts.lyrics.family}`;
+
+  const minGap = 8;
+  const chordPositions: { chord: Chord; xPos: number; width: number; charPos: number }[] = [];
+  const lyricSegments: { text: string; xPos: number }[] = [];
+
+  let currentX = x;
+
+  // Process each chord and the lyrics before it
+  for (let i = 0; i < sortedChords.length; i++) {
+    const cp = sortedChords[i];
+    const prevCharPos = i === 0 ? 0 : sortedChords[i - 1].position;
+    const segmentText = lyrics.substring(prevCharPos, cp.position);
+
+    // Add lyric segment
+    if (segmentText) {
+      lyricSegments.push({ text: segmentText, xPos: currentX });
+      currentX += ctx.measureText(segmentText).width;
+    }
+
+    // Calculate chord width
+    const chordWidth = measureChordWidth(ctx, cp.chord, config);
+
+    // Check if chord overlaps with previous
+    if (chordPositions.length > 0) {
+      const prev = chordPositions[chordPositions.length - 1];
+      const minX = prev.xPos + prev.width + minGap;
+      if (currentX < minX) {
+        // Add extra space to lyrics
+        const extraSpace = minX - currentX;
+        currentX = minX;
+      }
+    }
+
+    chordPositions.push({
+      chord: cp.chord,
+      xPos: currentX,
+      width: chordWidth,
+      charPos: cp.position
+    });
+  }
+
+  // Add remaining lyrics after last chord
+  const lastChordPos = sortedChords[sortedChords.length - 1].position;
+  const remainingText = lyrics.substring(lastChordPos);
+  if (remainingText) {
+    lyricSegments.push({ text: remainingText, xPos: currentX });
+  }
+
+  return {
+    chordPositions: chordPositions.map(cp => ({ chord: cp.chord, xPos: cp.xPos })),
+    lyricSegments
+  };
+}
+
+/**
+ * Render chords above a lyric line, stretching lyrics to prevent chord overlap.
+ * Returns the stretched lyrics X positions for the SectionRenderer to use.
  */
 export function renderChordsAboveLyrics(
   ctx: CanvasRenderingContext2D,
@@ -132,20 +218,26 @@ export function renderChordsAboveLyrics(
   lyrics: string,
   x: number,
   chordY: number,
+  lyricY: number,
   config: RenderConfig = DEFAULT_CONFIG
 ): void {
   if (chords.length === 0) return;
 
-  // We need to calculate where each character position maps to in pixels
+  const layout = layoutChordsAndLyrics(ctx, chords, lyrics, x, config);
+
+  // Render chords
+  for (const cp of layout.chordPositions) {
+    renderChord(ctx, cp.chord, cp.xPos, chordY, config);
+  }
+
+  // Render stretched lyrics
   ctx.font = `${config.fonts.lyrics.weight} ${config.fonts.lyrics.size}px ${config.fonts.lyrics.family}`;
+  ctx.fillStyle = config.colors.textSecondary;
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
 
-  for (const cp of chords) {
-    // Get the substring up to the chord position
-    const prefix = lyrics.substring(0, cp.position);
-    const prefixWidth = ctx.measureText(prefix).width;
-
-    // Render the chord at this position
-    renderChord(ctx, cp.chord, x + prefixWidth, chordY, config);
+  for (const seg of layout.lyricSegments) {
+    ctx.fillText(seg.text, seg.xPos, lyricY);
   }
 }
 
