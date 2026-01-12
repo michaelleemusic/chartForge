@@ -610,3 +610,28 @@ export function getEnharmonic(note: string): string | null {
   const normalized = normalizeNote(note);
   return ENHARMONIC_MAP[normalized] || null;
 }
+
+/**
+ * Convert a Chord from number notation to letter notation.
+ */
+export function convertChordToLetter(chord: Chord, key: Key): Chord {
+  // Check if root is a number
+  if (!/^[#b]?[1-7]$/.test(chord.root)) {
+    return chord; // Already letter notation
+  }
+
+  const fullChord = chord.root + (chord.quality || '') + (chord.bass ? '/' + chord.bass : '');
+  const converted = numberToLetter(fullChord, key);
+
+  if (!converted) return chord;
+
+  const parsed = parseChord(converted);
+  return parsed || chord;
+}
+
+/**
+ * Check if a chord is in number notation.
+ */
+export function isNumberChord(chord: Chord): boolean {
+  return /^[#b]?[1-7]$/.test(chord.root);
+}

@@ -1,0 +1,198 @@
+{title: I Thank God}
+{artist: Maverick City Music}
+{key: Db}
+{tempo: 130}
+{time: 4/4}
+
+{section: Intro}
+{dynamics: Acoustic Guitar driving, Tom groove}
+[1] [1sus4] [1] [1sus4]
+[1] [1sus4] [1] [1sus4]
+
+{section: Verse 1}
+Wandering [1]into the night
+Wanting a place to hide
+This weary soul [42]
+This bag of bones [1] [4/1]
+
+{section: Verse 2}
+I [1]tried with all my might
+But I just can't win the fight
+I'm slowly drifting [42]a vagabond [1]
+
+{section: Pre Chorus 1}
+{dynamics: Build to Chorus}
+And just [5]when I ran out [6m7]of road
+I met [4]a man I didn't [1]know
+And he [5]told me
+That I [1/3]was not alone [4]
+
+{section: Chorus}
+{dynamics: Bigger}
+You picked [1]me up turned [2m7]me around
+Placed [1/3]my feet on solid [42]ground
+I thank the Master [6m7]
+I thank the Savior [42]
+Because He healed [1]my heart
+He changed [2m7]my name
+Forever [1/3]free I'm not [42]the same
+I thank the Master [6m7]
+I thank the Savior [42]
+I thank God
+
+{section: Turnaround}
+[1] [4/1] [1] [4/1]
+
+{section: Verse 3}
+{dynamics: Back to Verse feel}
+I cannot [1]deny what I've seen
+Got no choice but to believe
+My doubts are burning [42]
+Like ashes in the wind [1] [4/1]
+
+{section: Verse 4}
+So so [1]long to my old friends [4/1]
+Burden [1]and bitterness
+You can just keep it moving [42]
+Nah you ain't welcome here [1]
+
+{section: Pre Chorus 2}
+From now [5]till I walk the streets [6m7]of gold
+I'll sing [4]of how You saved [1]my soul
+This wayward [5]son
+Has found [1/3]his way back home [4]
+
+{section: Chorus}
+{dynamics: Bigger}
+You picked [1]me up turned [2m7]me around
+Placed [1/3]my feet on solid [42]ground
+I thank the Master [6m7]
+I thank the Savior [42]
+Because He healed [1]my heart
+He changed [2m7]my name
+Forever [1/3]free I'm not [42]the same
+I thank the Master [6m7]
+I thank the Savior [42]
+I thank God
+
+{section: Turnaround}
+[1] [4/1] [1] [4/1]
+
+{section: Turnaround}
+[1] [4/1] [1] [4/1]
+
+{section: Bridge 1}
+{dynamics: Slight breakdown}
+Hell [1]lost another one
+I am free
+I am free
+I am free
+Hell lost another one
+I am free
+I am free
+I am free
+
+{section: Bridge 1}
+Hell [1]lost another one
+I am free
+I am free
+I am free
+Hell lost another one
+I am free
+I am free
+I am free
+
+{section: Bridge 2}
+{dynamics: Band building}
+Hell [5]lost another one
+I [6m7]am free
+I [42]am free
+I [1]am free
+Hell [5]lost another one
+I [6m7]am free
+I [42]am free
+I am free
+
+{section: Bridge 3}
+{dynamics: Build to Chorus}
+Hell [1]lost another one
+I am free
+I am free
+I am free
+Hell [5]lost another one
+I [6m7]am free
+I [42]am free
+I am free
+
+{section: Chorus}
+{dynamics: Full groove}
+You picked [1]me up turned [2m7]me around
+Placed [1/3]my feet on solid [42]ground
+I thank the Master [6m7]
+I thank the Savior [42]
+Because He healed [1]my heart
+He changed [2m7]my name
+Forever [1/3]free I'm not [42]the same
+I thank the Master [6m7]
+I thank the Savior [42]
+I thank God
+
+{section: Turnaround}
+[1] [4/1] [1] [4/1]
+
+{section: Turnaround}
+[1] [4/1] [1] [4/1]
+
+{section: Interlude}
+{dynamics: Dynamics down, Vamping}
+[1]
+
+{section: Interlude}
+[1]
+
+{section: Refrain}
+Get [1]up get up get up
+Get up out of that grave
+Get [1sus4]up get up get up
+Get up out of that grave
+Get [1]up get up get up
+Get up out of that grave
+Get [1sus4]up get up get up
+Get up out of that grave
+
+{section: Refrain}
+{dynamics: Getting bigger}
+Get [1]up get up get up
+Get up out of that grave
+Get [1sus4]up get up get up
+Get up out of that grave
+Get [1]up get up get up
+Get up out of that grave
+Get [1sus4]up get up get up
+Get up out of that grave
+
+{section: Refrain}
+Get [1]up get up get up
+Get up out of that grave
+Get [1sus4]up get up get up
+Get up out of that grave
+Get [1]up get up get up
+Get up out of that grave
+Get [1sus4]up get up get up
+Get up out of that grave
+
+{section: Chorus}
+{dynamics: Dynamics drop}
+You picked [1]me up turned [2m7]me around
+Placed [1/3]my feet on solid [42]ground
+I thank the Master [6m7]
+I [56]thank the Savior [42] [2m7]
+Because He healed [1]my heart
+He changed [2m7]my name
+Forever [1/3]free I'm not [7#5]the same
+I [2m7]thank the Master [6m7]
+I thank the Savior [42]
+I thank God
+
+{section: Ending}
+[1]

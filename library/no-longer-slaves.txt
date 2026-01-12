@@ -1,0 +1,129 @@
+{title: No Longer Slaves}
+{artist: Bethel Music}
+{key: Bb}
+{tempo: 74}
+{time: 4/4}
+
+{section: Verse 1}
+{dynamics: Acoustic Guitar & Piano}
+You unravel [1]me with a melody
+You surround [4]me with [5]a song [1]
+Of deliverance [1]from my enemies
+'Til all [4]my fears [5]are gone [1]
+
+{section: Chorus}
+{dynamics: Add Strings}
+I'm no longer [4]a slave [5]to fear [1]
+I [6m]am a child [5]of God [1]
+I'm no longer [4]a slave [5]to fear [1]
+I [6m]am a child [5]of God
+
+{section: Interlude}
+{dynamics: Add Bass, Keys & Light Drums}
+[6m] [5] [1] [4]
+[6m] [5] [1] [4]
+
+{section: Verse 2}
+{dynamics: Add Electric Guitar, Light Tom groove}
+From my mother's [1]womb
+You have chosen [3m]me
+Love has [4]called [5]my name [1]
+I've been born [1]again into Your family [3m]
+Your blood [4]flows through [5]my veins [1]
+
+{section: Chorus}
+{dynamics: Increase dynamics slightly}
+I'm no longer [4]a slave [5]to fear [1]
+I [6m]am a child [5]of God [1]
+I'm no longer [4]a slave [5]to fear [1]
+I [6m]am a child [5]of God [1]
+
+{section: Chorus}
+I'm no longer [4]a slave [5]to fear [1]
+I [6m]am a child [5]of God [1]
+I'm no longer [4]a slave [5]to fear [1]
+I [6m]am a child [5]of God
+
+{section: Breakdown}
+{dynamics: Piano only}
+[6m] [5] [1] [4]
+[6m] [5] [1] [4]
+
+{section: Instrumental}
+I [6m]am [5]surrounded [1] [4]
+By [6m]the arms [5]of the Father [1] [4]
+
+{section: Instrumental}
+I [6m]am [5]surrounded [1] [4]
+By songs [6m]of [5]deliver [1]ance [4]
+
+{section: Instrumental}
+{dynamics: Start building, add soft Toms}
+We've [6m]been liber [5]ated [1] [4]
+From [6m]our bondage [5] [1] [4]
+
+{section: Instrumental}
+{dynamics: Continue building}
+We're [6m]the sons [5]and the daughters [1] [4]
+Let [6m]us sing [5]our freedom [1] [4]
+
+{section: Interlude}
+[6m] [5] [1] [4]
+[6m] [5] [1] [4]
+
+{section: Interlude}
+{dynamics: Continue building}
+[6m] [5] [1] [4]
+[6m] [5] [1] [4]
+
+{section: Interlude}
+[6m] [5] [1] [4]
+[6m] [5] [1] [4]
+
+{section: Bridge}
+{dynamics: All in, full Groove}
+You [6m]split the sea [5]
+So I could walk [1]right through [4]it
+My [6m]fears were drowned [5]
+In perfect love [1] [4]
+You [6m]rescued me [5]
+And I will stand [1]and sing [3m]
+I am [4]a child [5]of God [1]
+
+{section: Bridge}
+{dynamics: All in}
+You [6m]split the sea [5]
+So I could walk [1]right through [4]it
+My [6m]fears were drowned [5]
+In perfect love [1] [4]
+You [6m]rescued me [5]
+And I will stand [1]and sing [3m]
+I am [4]a child [5]of God [1]
+
+{section: Tag}
+I am [4]a child [5]of God [1]
+
+{section: Tag}
+I am [4]a child [5]of God [1]
+
+{section: Tag}
+I am [4]a child [5]of God [1]
+
+{section: Tag}
+I am [4]a child [5]of God [1]
+
+{section: Tag}
+I am [4]a child [5]of God
+
+{section: Breakdown}
+[1]
+
+{section: Chorus}
+{dynamics: Piano only}
+I'm no longer [4]a slave [5sus4]to fear [1]
+I [6m]am a child [5sus4]of God [1]
+I'm no longer [4]a slave [5sus4]to fear [1]
+I [6m]am a child [5sus4]of God
+
+{section: Ending}
+[1]

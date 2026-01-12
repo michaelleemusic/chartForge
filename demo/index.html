@@ -51,31 +51,62 @@
       resize: vertical;
     }
 
-    .controls button {
-      margin-top: 10px;
-      padding: 10px 20px;
-      background: #4a4a4a;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
+    .controls select {
+      padding: 10px 14px;
       font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: white;
+      cursor: pointer;
+      min-width: 140px;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 36px;
     }
 
-    .controls button:hover {
-      background: #333;
+    .controls select:hover {
+      border-color: #999;
+    }
+
+    .controls select:focus {
+      outline: none;
+      border-color: #4a4a4a;
+      box-shadow: 0 0 0 2px rgba(74, 74, 74, 0.2);
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 15px;
     }
 
     .page-controls {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 10px;
+      gap: 12px;
+      margin-bottom: 12px;
     }
 
     .page-controls button {
-      margin-top: 0;
       padding: 8px 16px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: white;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .page-controls button:hover:not(:disabled) {
+      border-color: #999;
+      background: #f5f5f5;
+    }
+
+    .page-controls button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
     }
 
     .page-controls span {
@@ -120,8 +151,31 @@
     <h1>ChartMaker Renderer Demo</h1>
 
     <div class="controls">
+      <div class="toolbar">
+        <select id="library-select">
+          <option value="">Custom Input</option>
+          <option value="living-hope">Living Hope</option>
+          <option value="no-longer-slaves">No Longer Slaves</option>
+          <option value="i-thank-god">I Thank God</option>
+        </select>
+        <select id="render-key">
+          <option value="numbers">Numbers</option>
+          <option value="C">Key of C</option>
+          <option value="Db">Key of Db</option>
+          <option value="D">Key of D</option>
+          <option value="Eb">Key of Eb</option>
+          <option value="E">Key of E</option>
+          <option value="F">Key of F</option>
+          <option value="Gb">Key of Gb</option>
+          <option value="G">Key of G</option>
+          <option value="Ab">Key of Ab</option>
+          <option value="A">Key of A</option>
+          <option value="Bb">Key of Bb</option>
+          <option value="B">Key of B</option>
+        </select>
+      </div>
       <label>
-        Paste ChordPro or Simple Text format:
+        Chart input:
         <textarea id="input">{title: Living Hope}
 {artist: Phil Wickham}
 {key: Eb}
@@ -130,57 +184,52 @@
 
 {section: Intro}
 {dynamics: Acoustic Guitar, Piano & Pad}
-[Eb] [Absus2] [Eb] [Absus2]
+[1] [4sus2] [1] [4sus2]
 
 {section: Verse 1}
-How great the [Eb]chasm
-That lay between [Bbsus4]us
-How high the [Ab2]mountain
-[Cm7]I could not [Bbsus4]climb
-In desperation [Eb]I turned to Heaven [Bbsus4]
-And spoke Your name [Absus2]Into [Bbsus4]the night [Eb]
+How great the [1]chasm
+That lay between [5sus4]us
+How high the [42]mountain
+[6m7]I could not [5sus4]climb
+In desperation [1]I turned to Heaven [5sus4]
+And spoke Your name [4sus2]Into [5sus4]the night [1]
 
 {section: Pre Chorus 1}
-Then through the darkness [Absus2]
-Your loving kindness [Eb]
-Tore through the shadows [Cm7]of my soul [Bbsus4]
-The work is finished [Eb]the end is written [Bbsus4]
-Jesus Christ [Absus2]my living [Bbsus4]hope [Eb]
+Then through the darkness [4sus2]
+Your loving kindness [1]
+Tore through the shadows [6m7]of my soul [5sus4]
+The work is finished [1]the end is written [5sus4]
+Jesus Christ [4sus2]my living [5sus4]hope
 
 {section: Interlude}
-[Eb] [Ab]
+[1] [4]
 
 {section: Verse 2}
 {dynamics: Add Bass & soft Drum groove}
-Who could imagine [Eb]
-So great a mercy [Bbsus4]
-What heart could fathom [Ab2]
-Such [Cm7]boundless grace [Bbsus4]
-The God of ages [Eb]
-Stepped down from glory [Bbsus4]
-To wear my sin [Ab2]And bear [Bbsus4]my shame [Eb]
+Who could imagine [1]
+So great a mercy [5sus4]
+What heart could fathom [42]
+Such [6m7]boundless grace [5sus4]
+The God of ages [1]
+Stepped down from glory [5sus4]
+To wear my sin [42]And bear [5sus4]my shame [1]
 
 {section: Chorus}
 {dynamics: Increase Dynamics}
-Hallelu - [Ab2]jah [Eb]
-Praise the One [Bbadd4]who set me free [Cm7]
-Hallelu - [Ab2]jah [Eb]
-Death has lost [Bbadd4]its grip on me [Cm7]
-You [Cm7/Bb]have broken [Ab2]every chain [Eb]
-There's salvation [Bbadd4]in Your name [Cm7]
-Jesus [Cm7/Bb]Christ [Ab2]my living [Bbsus4]hope [Eb]
-
-{section: Bridge}
-{dynamics: Build energy}
-[B] [C#m] [A] [Esus4] [E/G#]
+Hallelu - [42]jah [1]
+Praise the One [5add4]who set me free [6m7]
+Hallelu - [42]jah [1]
+Death has lost [5add4]its grip on me [6m7]
+You [6m7/5]have broken [42]every chain [1]
+There's salvation [5add4]in Your name [6m7]
+Jesus [6m7/5]Christ [42]my living [5sus4]hope [1]
 
 {section: Tag}
-Jesus Yours [Ab2]is the victory [Bbadd4]
+Jesus Yours [42]is the victory [5add4]
 
 {section: Ending}
-[Eb]</textarea>
+[1]</textarea>
       </label>
-      <button id="render-btn">Render Chart</button>
       <div class="error" id="error"></div>
       <div class="info">
         Tip: This demo uses the browser's Canvas API. The Lato font family will be used if available, otherwise system fonts.
@@ -412,7 +461,19 @@ Jesus Yours [Ab2]is the victory [Bbadd4]
     }
 
     function parseChordString(str) {
-      // Match root, quality, and optional bass note
+      // First check for number chords (Nashville notation): 1, 2, 42, 6m7, 1/3, etc.
+      const numberMatch = str.match(/^([#b]?[1-7])(.*?)(?:\/([#b]?[1-7]))?$/);
+      if (numberMatch) {
+        const [, root, quality, bass] = numberMatch;
+        return {
+          root,
+          quality: quality || undefined,
+          bass: bass || undefined,
+          isNumber: true
+        };
+      }
+
+      // Match letter chords: root, quality, and optional bass note
       const match = str.match(/^([A-G][#b]?)(.*?)(?:\/([A-G][#b]?))?$/);
       if (!match) return { root: str };
 
@@ -420,7 +481,8 @@ Jesus Yours [Ab2]is the victory [Bbadd4]
       return {
         root,
         quality: quality || undefined,
-        bass: bass || undefined
+        bass: bass || undefined,
+        isNumber: false
       };
     }
 
@@ -949,7 +1011,6 @@ Jesus Yours [Ab2]is the victory [Bbadd4]
 
     // Demo app
     const inputEl = document.getElementById('input');
-    const renderBtn = document.getElementById('render-btn');
     const canvas = document.getElementById('chart-canvas');
     const errorEl = document.getElementById('error');
     const prevBtn = document.getElementById('prev-btn');
@@ -982,7 +1043,8 @@ Jesus Yours [Ab2]is the victory [Bbadd4]
       }
     }
 
-    renderBtn.addEventListener('click', render);
+    // Realtime rendering on textarea input
+    inputEl.addEventListener('input', render);
 
     prevBtn.addEventListener('click', () => {
       if (currentPage > 0) {
@@ -999,6 +1061,339 @@ Jesus Yours [Ab2]is the victory [Bbadd4]
         updatePageControls();
       }
     });
+
+    // Library chart data (stored in Nashville Number notation)
+    const LIBRARY_CHARTS = {
+      'living-hope': `{title: Living Hope}
+{artist: Phil Wickham}
+{key: Eb}
+{tempo: 72}
+{time: 4/4}
+
+{section: Intro}
+{dynamics: Acoustic Guitar, Piano & Pad}
+[1] [4sus2] [1] [4sus2]
+
+{section: Verse 1}
+How great the [1]chasm
+That lay between [5sus4]us
+How high the [42]mountain
+[6m7]I could not [5sus4]climb
+In desperation [1]I turned to Heaven [5sus4]
+And spoke Your name [4sus2]Into [5sus4]the night [1]
+
+{section: Pre Chorus 1}
+Then through the darkness [4sus2]
+Your loving kindness [1]
+Tore through the shadows [6m7]of my soul [5sus4]
+The work is finished [1]the end is written [5sus4]
+Jesus Christ [4sus2]my living [5sus4]hope
+
+{section: Interlude}
+[1] [4]
+
+{section: Verse 2}
+{dynamics: Add Bass & soft Drum groove}
+Who could imagine [1]
+So great a mercy [5sus4]
+What heart could fathom [42]
+Such [6m7]boundless grace [5sus4]
+The God of ages [1]
+Stepped down from glory [5sus4]
+To wear my sin [42]And bear [5sus4]my shame [1]
+
+{section: Pre Chorus 2}
+{dynamics: Increase dynamics slightly}
+The Cross has spoken [4sus2]I am forgiven [1]
+The King of kings [6m7]calls me His own [5]
+Beautiful Savior [1]I'm Yours forever [5sus4]
+Jesus Christ [4sus2]my living [5sus4]hope [1]
+
+{section: Chorus}
+{dynamics: Increase Dynamics}
+Hallelu - [42]jah [1]
+Praise the One [5add4]who set me free [6m7]
+Hallelu - [42]jah [1]
+Death has lost [5add4]its grip on me [6m7]
+You [6m7/5]have broken [42]every chain [1]
+There's salvation [5add4]in Your name [6m7]
+Jesus [6m7/5]Christ [42]my living [5sus4]hope [1]
+
+{section: Tag}
+Jesus Yours [42]is the victory [5add4]
+
+{section: Ending}
+[1]`,
+
+      'no-longer-slaves': `{title: No Longer Slaves}
+{artist: Bethel Music}
+{key: Bb}
+{tempo: 74}
+{time: 4/4}
+
+{section: Verse 1}
+{dynamics: Acoustic Guitar & Piano}
+You unravel [1]me with a melody
+You surround [4]me with [5]a song [1]
+Of deliverance [1]from my enemies
+'Til all [4]my fears [5]are gone [1]
+
+{section: Chorus}
+{dynamics: Add Strings}
+I'm no longer [4]a slave [5]to fear [1]
+I [6m]am a child [5]of God [1]
+I'm no longer [4]a slave [5]to fear [1]
+I [6m]am a child [5]of God
+
+{section: Interlude}
+{dynamics: Add Bass, Keys & Light Drums}
+[6m] [5] [1] [4]
+[6m] [5] [1] [4]
+
+{section: Verse 2}
+{dynamics: Add Electric Guitar, Light Tom groove}
+From my mother's [1]womb
+You have chosen [3m]me
+Love has [4]called [5]my name [1]
+I've been born [1]again into Your family [3m]
+Your blood [4]flows through [5]my veins [1]
+
+{section: Chorus}
+{dynamics: Increase dynamics slightly}
+I'm no longer [4]a slave [5]to fear [1]
+I [6m]am a child [5]of God [1]
+I'm no longer [4]a slave [5]to fear [1]
+I [6m]am a child [5]of God
+
+{section: Bridge}
+{dynamics: All in, full Groove}
+You [6m]split the sea [5]
+So I could walk [1]right through [4]it
+My [6m]fears were drowned [5]
+In perfect love [1] [4]
+You [6m]rescued me [5]
+And I will stand [1]and sing [3m]
+I am [4]a child [5]of God [1]
+
+{section: Tag}
+I am [4]a child [5]of God [1]
+
+{section: Ending}
+[1]`,
+
+      'i-thank-god': `{title: I Thank God}
+{artist: Maverick City Music}
+{key: Db}
+{tempo: 130}
+{time: 4/4}
+
+{section: Intro}
+{dynamics: Acoustic Guitar driving, Tom groove}
+[1] [1sus4] [1] [1sus4]
+[1] [1sus4] [1] [1sus4]
+
+{section: Verse 1}
+Wandering [1]into the night
+Wanting a place to hide
+This weary soul [42]
+This bag of bones [1] [4/1]
+
+{section: Verse 2}
+I [1]tried with all my might
+But I just can't win the fight
+I'm slowly drifting [42]a vagabond [1]
+
+{section: Pre Chorus 1}
+{dynamics: Build to Chorus}
+And just [5]when I ran out [6m7]of road
+I met [4]a man I didn't [1]know
+And he [5]told me
+That I [1/3]was not alone [4]
+
+{section: Chorus}
+{dynamics: Bigger}
+You picked [1]me up turned [2m7]me around
+Placed [1/3]my feet on solid [42]ground
+I thank the Master [6m7]
+I thank the Savior [42]
+Because He healed [1]my heart
+He changed [2m7]my name
+Forever [1/3]free I'm not [42]the same
+I thank the Master [6m7]
+I thank the Savior [42]
+I thank God
+
+{section: Bridge 1}
+{dynamics: Slight breakdown}
+Hell [1]lost another one
+I am free
+I am free
+I am free
+
+{section: Bridge 2}
+{dynamics: Band building}
+Hell [5]lost another one
+I [6m7]am free
+I [42]am free
+I [1]am free
+
+{section: Ending}
+[1]`
+    };
+
+    // Number to Letter conversion utilities
+    const CHROMATIC_SHARPS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+    const CHROMATIC_FLATS = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
+    const MAJOR_SCALE_INTERVALS = [0, 2, 4, 5, 7, 9, 11];
+    const FLAT_KEYS = new Set(['F', 'Bb', 'Eb', 'Ab', 'Db', 'Gb', 'Cb']);
+
+    function getNoteIndex(note) {
+      let idx = CHROMATIC_SHARPS.indexOf(note);
+      if (idx === -1) idx = CHROMATIC_FLATS.indexOf(note);
+      return idx;
+    }
+
+    function getNoteAtIndex(index, preferFlats) {
+      const normalizedIndex = ((index % 12) + 12) % 12;
+      return preferFlats ? CHROMATIC_FLATS[normalizedIndex] : CHROMATIC_SHARPS[normalizedIndex];
+    }
+
+    function getMajorScale(keyRoot) {
+      const rootIndex = getNoteIndex(keyRoot);
+      if (rootIndex === -1) return null;
+      const preferFlats = FLAT_KEYS.has(keyRoot);
+      return MAJOR_SCALE_INTERVALS.map(interval => getNoteAtIndex(rootIndex + interval, preferFlats));
+    }
+
+    function numberToLetter(chordStr, key) {
+      // Handle chromatic prefix (b7, #4, etc.)
+      const chromaticMatch = chordStr.match(/^([#b])([1-7])(.*)$/);
+      if (chromaticMatch) {
+        const [, alteration, degreeStr, rest] = chromaticMatch;
+        const degree = parseInt(degreeStr, 10);
+        const scale = getMajorScale(key);
+        if (!scale) return chordStr;
+
+        const baseNote = scale[degree - 1];
+        const baseIndex = getNoteIndex(baseNote);
+        let targetIndex = baseIndex;
+        if (alteration === '#') targetIndex = (baseIndex + 1) % 12;
+        else if (alteration === 'b') targetIndex = (baseIndex + 11) % 12;
+
+        const root = getNoteAtIndex(targetIndex, FLAT_KEYS.has(key));
+        return root + rest;
+      }
+
+      // Parse regular number chord
+      const match = chordStr.match(/^([1-7])(.*)$/);
+      if (!match) return chordStr;
+
+      const [, degreeStr, quality] = match;
+      const degree = parseInt(degreeStr, 10);
+      const scale = getMajorScale(key);
+      if (!scale) return chordStr;
+
+      const root = scale[degree - 1];
+
+      // Handle slash chord bass note
+      const slashMatch = quality.match(/^([^/]*)\/([#b]?[1-7])$/);
+      if (slashMatch) {
+        const [, chordQuality, bassNum] = slashMatch;
+        const bassDegree = parseInt(bassNum.replace(/[#b]/, ''), 10);
+        let bassNote = scale[bassDegree - 1];
+
+        // Handle chromatic bass
+        if (bassNum.startsWith('#')) {
+          const idx = getNoteIndex(bassNote);
+          bassNote = getNoteAtIndex((idx + 1) % 12, FLAT_KEYS.has(key));
+        } else if (bassNum.startsWith('b')) {
+          const idx = getNoteIndex(bassNote);
+          bassNote = getNoteAtIndex((idx + 11) % 12, FLAT_KEYS.has(key));
+        }
+
+        return root + chordQuality + '/' + bassNote;
+      }
+
+      return root + quality;
+    }
+
+    function convertChordToLetter(chord, key) {
+      if (!chord.isNumber) return chord;
+
+      const fullChord = chord.root + (chord.quality || '') + (chord.bass ? '/' + chord.bass : '');
+      const converted = numberToLetter(fullChord, key);
+
+      // Re-parse the converted chord
+      const letterMatch = converted.match(/^([A-G][#b]?)(.*?)(?:\/([A-G][#b]?))?$/);
+      if (!letterMatch) return chord;
+
+      const [, root, quality, bass] = letterMatch;
+      return {
+        root,
+        quality: quality || undefined,
+        bass: bass || undefined,
+        isNumber: false
+      };
+    }
+
+    // Library and render key controls
+    const librarySelect = document.getElementById('library-select');
+    const renderKeySelect = document.getElementById('render-key');
+
+    librarySelect.addEventListener('change', () => {
+      const chartId = librarySelect.value;
+      if (chartId && LIBRARY_CHARTS[chartId]) {
+        inputEl.value = LIBRARY_CHARTS[chartId];
+        render();
+      }
+    });
+
+    renderKeySelect.addEventListener('change', () => {
+      render();
+    });
+
+    // Override render to apply key conversion
+    const originalRender = render;
+    render = function() {
+      try {
+        errorEl.style.display = 'none';
+        const input = inputEl.value;
+        let song = parseChordPro(input);
+
+        const selectedKey = renderKeySelect.value;
+
+        // Convert to letter notation if a key is selected (not "numbers")
+        if (selectedKey !== 'numbers') {
+          song = convertSongToLetters(song, selectedKey);
+          song.key = selectedKey;
+        }
+
+        renderer.loadSong(song);
+        currentPage = 0;
+        renderer.renderPage(canvas, currentPage);
+        updatePageControls();
+      } catch (e) {
+        errorEl.textContent = 'Error: ' + e.message;
+        errorEl.style.display = 'block';
+        console.error(e);
+      }
+    };
+
+    function convertSongToLetters(song, key) {
+      return {
+        ...song,
+        sections: song.sections.map(section => ({
+          ...section,
+          lines: section.lines.map(line => ({
+            ...line,
+            chords: line.chords.map(cp => ({
+              ...cp,
+              chord: convertChordToLetter(cp.chord, key)
+            }))
+          }))
+        }))
+      };
+    }
 
     // Initial render
     render();

@@ -1,0 +1,115 @@
+{title: Living Hope}
+{artist: Phil Wickham}
+{key: Eb}
+{tempo: 72}
+{time: 4/4}
+
+{section: Intro}
+{dynamics: Acoustic Guitar, Piano & Pad}
+[1] [4sus2] [1] [4sus2]
+
+{section: Verse 1}
+How great the [1]chasm
+That lay between [5sus4]us
+How high the [42]mountain
+[6m7]I could not [5sus4]climb
+In desperation [1]I turned to Heaven [5sus4]
+And spoke Your name [4sus2]Into [5sus4]the night [1]
+
+{section: Pre Chorus 1}
+Then through the darkness [4sus2]
+Your loving kindness [1]
+Tore through the shadows [6m7]of my soul [5sus4]
+The work is finished [1]the end is written [5sus4]
+Jesus Christ [4sus2]my living [5sus4]hope
+
+{section: Interlude}
+[1] [4]
+
+{section: Verse 2}
+{dynamics: Add Bass & soft Drum groove}
+Who could imagine [1]
+So great a mercy [5sus4]
+What heart could fathom [42]
+Such [6m7]boundless grace [5sus4]
+The God of ages [1]
+Stepped down from glory [5sus4]
+To wear my sin [42]And bear [5sus4]my shame [1]
+
+{section: Pre Chorus 2}
+{dynamics: Increase dynamics slightly}
+The Cross has spoken [4sus2]I am forgiven [1]
+The King of kings [6m7]calls me His own [5]
+Beautiful Savior [1]I'm Yours forever [5sus4]
+Jesus Christ [4sus2]my living [5sus4]hope [1]
+
+{section: Chorus}
+{dynamics: Increase Dynamics}
+Hallelu - [42]jah [1]
+Praise the One [5add4]who set me free [6m7]
+Hallelu - [42]jah [1]
+Death has lost [5add4]its grip on me [6m7]
+You [6m7/5]have broken [42]every chain [1]
+There's salvation [5add4]in Your name [6m7]
+Jesus [6m7/5]Christ [42]my living [5sus4]hope [1]
+
+{section: Breakdown}
+{dynamics: 2 bar breakdown}
+[1] [4]
+
+{section: Verse 3}
+{dynamics: Piano & Pad}
+Then came the morning [1]
+That sealed the promise [5sus4]
+Your buried body [4sus2]
+Began [6m7]to breathe [5sus4]
+Out of the silence [1]
+The Roaring Lion [5sus4]
+Declared the grave [4sus2]
+Has no claim [5sus4]on me [1]
+
+{section: Verse 3}
+{dynamics: Slowly add Full Band}
+Then came the morning [1]
+That sealed the promise [5sus4]
+Your buried body [42]
+Began [6m7]to [5sus4]breathe
+Out of the silence [1]
+The Roaring Lion [5add4]
+Declared the grave [42]
+Has no claim [5add4]on me [6m7] [1/3]
+
+{section: Tag}
+Jesus Yours [42]is the victory [5add4]
+
+{section: Vamp}
+{dynamics: Build to bridge}
+[1]
+
+{section: Chorus}
+{dynamics: All in}
+Hallelu - [42]jah [1]
+Praise the One [5add4]who set me free [6m7]
+Hallelu - [42]jah [1]
+Death has lost [5add4]its grip on me [6m7]
+You [6m7/5]have broken [42]every chain [1]
+There's salvation [5add4]in Your name [6m7]
+Jesus [6m7/5]Christ [42]my living [5add4]hope [1]
+
+{section: Chorus}
+Halle [1/3]lu - [42]jah [1]
+Praise the One [5add4]who set me free [6m7]
+Hallelu - [42]jah [1]
+Death has lost [5add4]its grip on me [6m7]
+You [5add4]have broken [42]every chain [1]
+There's salvation [5add4]in Your name [6m7]
+Jesus [6m7/5]Christ [42]my living [5add4]hope [6m7] [1/3]
+
+{section: Tag}
+Jesus Christ [42]my living [5add4]hope [6m7] [1/3]
+
+{section: Tag}
+God You are [42]my living [5add4]hope
+
+{section: Ending}
+[1]
