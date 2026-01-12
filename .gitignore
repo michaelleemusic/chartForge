@@ -21,5 +21,8 @@ build/
 .DS_Store
 Thumbs.db
 
+# Test coverage
+coverage/
+
 # Reference materials (large binaries, not for repo)
 REF/

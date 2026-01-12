@@ -1,0 +1,31 @@
+{
+  "name": "chartmaker",
+  "version": "1.0.0",
+  "description": "Nashville number chart generator - parse and render chord charts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/michaelleemusic/ChartMaker.git"
+  },
+  "keywords": ["chord", "chart", "music", "nashville", "chordpro", "parser"],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/michaelleemusic/ChartMaker/issues"
+  },
+  "homepage": "https://github.com/michaelleemusic/ChartMaker#readme",
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^25.0.6",
+    "jest": "^30.2.0",
+    "ts-jest": "^29.4.6",
+    "typescript": "^5.9.3"
+  }
+}
