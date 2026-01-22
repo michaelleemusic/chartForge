@@ -137,6 +137,11 @@ describe('getMajorScale', () => {
     expect(scale[6]).toBe('D');
   });
 
+  it('should return correct Gb major scale with Cb', () => {
+    const scale = getMajorScale('Gb');
+    expect(scale).toEqual(['Gb', 'Ab', 'Bb', 'Cb', 'Db', 'Eb', 'F']);
+  });
+
   it('should throw for invalid key root', () => {
     expect(() => getMajorScale('X')).toThrow('Invalid key root: X');
   });

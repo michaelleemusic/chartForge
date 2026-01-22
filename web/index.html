@@ -1942,9 +1942,35 @@
     const MAJOR_SCALE_INTERVALS = [0, 2, 4, 5, 7, 9, 11];
     const FLAT_KEYS = new Set(['F', 'Bb', 'Eb', 'Ab', 'Db', 'Gb', 'Cb']);
 
+    // Properly spelled major scales (music theory requires unique letter names)
+    const MAJOR_SCALES = {
+      'C':  ['C',  'D',  'E',  'F',  'G',  'A',  'B'],
+      'G':  ['G',  'A',  'B',  'C',  'D',  'E',  'F#'],
+      'D':  ['D',  'E',  'F#', 'G',  'A',  'B',  'C#'],
+      'A':  ['A',  'B',  'C#', 'D',  'E',  'F#', 'G#'],
+      'E':  ['E',  'F#', 'G#', 'A',  'B',  'C#', 'D#'],
+      'B':  ['B',  'C#', 'D#', 'E',  'F#', 'G#', 'A#'],
+      'F#': ['F#', 'G#', 'A#', 'B',  'C#', 'D#', 'E#'],
+      'C#': ['C#', 'D#', 'E#', 'F#', 'G#', 'A#', 'B#'],
+      'F':  ['F',  'G',  'A',  'Bb', 'C',  'D',  'E'],
+      'Bb': ['Bb', 'C',  'D',  'Eb', 'F',  'G',  'A'],
+      'Eb': ['Eb', 'F',  'G',  'Ab', 'Bb', 'C',  'D'],
+      'Ab': ['Ab', 'Bb', 'C',  'Db', 'Eb', 'F',  'G'],
+      'Db': ['Db', 'Eb', 'F',  'Gb', 'Ab', 'Bb', 'C'],
+      'Gb': ['Gb', 'Ab', 'Bb', 'Cb', 'Db', 'Eb', 'F'],
+      'Cb': ['Cb', 'Db', 'Eb', 'Fb', 'Gb', 'Ab', 'Bb'],
+    };
+
     function getNoteIndex(note) {
       let idx = CHROMATIC_SHARPS.indexOf(note);
       if (idx === -1) idx = CHROMATIC_FLATS.indexOf(note);
+      // Handle Cb, Fb, E#, B#
+      if (idx === -1) {
+        if (note === 'Cb') idx = 11;
+        else if (note === 'Fb') idx = 4;
+        else if (note === 'E#') idx = 5;
+        else if (note === 'B#') idx = 0;
+      }
       return idx;
     }
 
@@ -1954,6 +1980,11 @@
     }
 
     function getMajorScale(keyRoot) {
+      // Use properly spelled scales from lookup
+      if (MAJOR_SCALES[keyRoot]) {
+        return MAJOR_SCALES[keyRoot];
+      }
+      // Fallback
       const rootIndex = getNoteIndex(keyRoot);
       if (rootIndex === -1) return null;
       const preferFlats = FLAT_KEYS.has(keyRoot);

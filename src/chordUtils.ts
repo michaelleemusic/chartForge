@@ -18,6 +18,25 @@ const MAJOR_SCALE_INTERVALS = [0, 2, 4, 5, 7, 9, 11];
 // Keys that prefer flats in their notation (keys with flats in key signature)
 const FLAT_KEYS = new Set(['F', 'Bb', 'Eb', 'Ab', 'Db', 'Gb', 'Cb', 'Dm', 'Gm', 'Cm', 'Fm', 'Bbm', 'Ebm', 'Abm']);
 
+// Properly spelled major scales (music theory requires unique letter names per scale degree)
+const MAJOR_SCALES: Record<string, string[]> = {
+  'C':  ['C',  'D',  'E',  'F',  'G',  'A',  'B'],
+  'G':  ['G',  'A',  'B',  'C',  'D',  'E',  'F#'],
+  'D':  ['D',  'E',  'F#', 'G',  'A',  'B',  'C#'],
+  'A':  ['A',  'B',  'C#', 'D',  'E',  'F#', 'G#'],
+  'E':  ['E',  'F#', 'G#', 'A',  'B',  'C#', 'D#'],
+  'B':  ['B',  'C#', 'D#', 'E',  'F#', 'G#', 'A#'],
+  'F#': ['F#', 'G#', 'A#', 'B',  'C#', 'D#', 'E#'],
+  'C#': ['C#', 'D#', 'E#', 'F#', 'G#', 'A#', 'B#'],
+  'F':  ['F',  'G',  'A',  'Bb', 'C',  'D',  'E'],
+  'Bb': ['Bb', 'C',  'D',  'Eb', 'F',  'G',  'A'],
+  'Eb': ['Eb', 'F',  'G',  'Ab', 'Bb', 'C',  'D'],
+  'Ab': ['Ab', 'Bb', 'C',  'Db', 'Eb', 'F',  'G'],
+  'Db': ['Db', 'Eb', 'F',  'Gb', 'Ab', 'Bb', 'C'],
+  'Gb': ['Gb', 'Ab', 'Bb', 'Cb', 'Db', 'Eb', 'F'],
+  'Cb': ['Cb', 'Db', 'Eb', 'Fb', 'Gb', 'Ab', 'Bb'],
+};
+
 // Map enharmonic equivalents
 const ENHARMONIC_MAP: Record<string, string> = {
   'C#': 'Db', 'Db': 'C#',
@@ -57,6 +76,13 @@ export function getNoteIndex(note: string): number {
   if (idx === -1) {
     idx = CHROMATIC_FLATS.indexOf(normalized);
   }
+  // Handle enharmonic edge cases (Cb, Fb, E#, B#)
+  if (idx === -1) {
+    if (normalized === 'CB') idx = 11;
+    else if (normalized === 'FB') idx = 4;
+    else if (normalized === 'E#') idx = 5;
+    else if (normalized === 'B#') idx = 0;
+  }
   return idx;
 }
 
@@ -91,14 +117,19 @@ export function isMinorKey(key: Key): boolean {
 
 /**
  * Build the major scale for a given key root.
- * Returns array of 7 notes.
+ * Returns array of 7 notes with proper enharmonic spelling.
  */
 export function getMajorScale(keyRoot: string): string[] {
+  // Use properly spelled scales from lookup table
+  if (MAJOR_SCALES[keyRoot]) {
+    return MAJOR_SCALES[keyRoot];
+  }
+
+  // Fallback for any unlisted keys (shouldn't happen in practice)
   const rootIndex = getNoteIndex(keyRoot);
   if (rootIndex === -1) {
     throw new Error(`Invalid key root: ${keyRoot}`);
   }
-  // Only check if the major key itself prefers flats, not its relative minor
   const preferFlats = FLAT_KEYS.has(keyRoot);
 
   return MAJOR_SCALE_INTERVALS.map(interval => {
