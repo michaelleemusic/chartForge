@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-ChartMaker - Web app to create, display, and export Nashville Number System chord charts (MultiTracks.com style).
+chartForge - Web app to create, display, and export Nashville Number System chord charts (MultiTracks.com style).
 
 ## Commands
 

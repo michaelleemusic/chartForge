@@ -1,5 +1,5 @@
 /**
- * ChartMaker - Chord Chart Parser and Renderer
+ * chartForge - Chord Chart Parser and Renderer
  *
  * A TypeScript library for parsing chord charts in multiple formats,
  * converting between letter and number notation, and rendering

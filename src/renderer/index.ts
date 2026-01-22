@@ -1,5 +1,5 @@
 /**
- * ChartMaker Renderer Module
+ * chartForge Renderer Module
  *
  * Canvas-based chart rendering with MultiTracks-style visual formatting.
  */

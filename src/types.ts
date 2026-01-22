@@ -1,5 +1,5 @@
 /**
- * ChartMaker Type Definitions
+ * chartForge Type Definitions
  *
  * Core data model for representing chord charts.
  */

@@ -4,8 +4,8 @@
 
 ```bash
 # Clone repo
-git clone git@github.com:michaelleemusic/ChartMaker.git
-cd ChartMaker
+git clone git@github.com:michaelleemusic/chartForge.git
+cd chartForge
 
 # Install dependencies (once project is initialized)
 npm install
@@ -17,7 +17,7 @@ npm run dev
 ## Project Structure (Planned)
 
 ```
-ChartMaker/
+chartForge/
 ├── src/
 │   ├── components/     # UI components
 │   ├── lib/

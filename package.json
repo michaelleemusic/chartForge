@@ -1,5 +1,5 @@
 {
-  "name": "chartmaker",
+  "name": "chartForge",
   "version": "1.0.0",
   "description": "Nashville number chart generator - parse and render chord charts",
   "main": "dist/index.js",
@@ -12,15 +12,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/michaelleemusic/ChartMaker.git"
+    "url": "git+https://github.com/michaelleemusic/chartForge.git"
   },
   "keywords": ["chord", "chart", "music", "nashville", "chordpro", "parser"],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/michaelleemusic/ChartMaker/issues"
+    "url": "https://github.com/michaelleemusic/chartForge/issues"
   },
-  "homepage": "https://github.com/michaelleemusic/ChartMaker#readme",
+  "homepage": "https://github.com/michaelleemusic/chartForge#readme",
   "devDependencies": {
     "@types/jest": "^30.0.0",
     "@types/node": "^25.0.6",
