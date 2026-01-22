@@ -6,11 +6,58 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 chartForge - Web app to create, display, and export Nashville Number System chord charts (MultiTracks.com style).
 
+**Primary Repository**: https://github.com/michaelleemusic/chartForge
+**Auth Method**: SSH keys (all local dev computers have SSH key access)
+
 ## Commands
 
 - `npm run build` - Compile TypeScript to dist/
 - `npm test` - Run Jest tests
 - `npm run test:watch` - Run tests in watch mode
+- `php -S localhost:3000 demo/index.php` - Run local dev server (PHP)
+- `node demo/server.js` - Run local dev server (Node.js)
+
+## Deployment - Production Server
+
+**Live URL**: https://proflee.me/chartforge/
+**Server**: DreamHost (pdx1-shared-a1-17.dreamhost.com)
+**SSH User**: proflee_me
+**Web Root**: ~/proflee.me/chartforge/
+
+### SSH Setup (one-time per machine)
+
+1. Generate a dedicated key:
+   ```bash
+   ssh-keygen -t ed25519 -f ~/.ssh/dreamhost_proflee -N "" -C "proflee.me-deploy"
+   ```
+
+2. Add to ~/.ssh/config:
+   ```
+   Host dreamhost-proflee
+       HostName pdx1-shared-a1-17.dreamhost.com
+       User proflee_me
+       IdentityFile ~/.ssh/dreamhost_proflee
+       IdentitiesOnly yes
+   ```
+
+3. Add public key to DreamHost:
+   - Panel → Websites → SFTP Users & Files → proflee_me → SSH Keys
+   - Or use `ssh-copy-id -i ~/.ssh/dreamhost_proflee.pub proflee_me@pdx1-shared-a1-17.dreamhost.com`
+
+4. Test: `ssh dreamhost-proflee "echo connected"`
+
+### Deploy to Production
+
+```bash
+# Sync project to production (excludes dev files)
+rsync -avz --delete \
+  --exclude='.git' \
+  --exclude='node_modules' \
+  --exclude='*.wav' \
+  --exclude='REF' \
+  --exclude='library/trash' \
+  ./ dreamhost-proflee:~/proflee.me/chartforge/
+```
 
 ## Architecture
 
@@ -80,11 +127,27 @@ scripts/
   convert_to_numbers.py - Convert letter chords to Nashville Numbers
 ```
 
+## Web Interface
+
+```
+demo/
+  index.html    - Main web interface (side-by-side editor + preview)
+  index.php     - PHP backend for library management (DreamHost compatible)
+  server.js     - Node.js backend alternative
+```
+
+Features:
+- Side-by-side editor with live preview
+- Library search (677 charts)
+- Library management (new, update, delete)
+- Key transposition (Numbers ↔ any key)
+- PDF export (single or Full Set ZIP with all keys)
+- Unicode accidentals (♭ and ♯)
+
 ## Reference
 
 - `REF/Charts/` - Sample PDF exports from MultiTracks ChartBuilder
 - `REF/MT ChartBuilder/` - Extracted iOS app (fonts, assets, reverse-engineering reference)
-- `demo/index.html` - Interactive renderer demo (open in browser)
 
 ## Key Fonts
 
