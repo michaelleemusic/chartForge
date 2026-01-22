@@ -902,6 +902,16 @@
 
           this.renderSection(ctx, section, x, sectionY, this.layout.columnWidth);
         }
+
+        // Footer on first page only
+        if (pageIndex === 0) {
+          const config = this.config;
+          ctx.font = `300 ${config.fonts.metadata.size - 2}px ${config.fonts.metadata.family}`;
+          ctx.fillStyle = config.colors.textMuted;
+          ctx.textAlign = 'right';
+          ctx.textBaseline = 'bottom';
+          ctx.fillText('charted by proflee.me', config.page.width - config.margins.right, config.page.height - 12);
+        }
       }
 
       renderHeader(ctx, pageIndex) {
