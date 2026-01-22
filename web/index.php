@@ -2,7 +2,7 @@
 /**
  * chartForge PHP Server
  *
- * Run locally: php -S localhost:3000 demo/index.php
+ * Run locally: php -S localhost:3000 web/index.php
  * Deploy to DreamHost: upload entire project, point domain to project root
  */
 
@@ -123,7 +123,7 @@ if (strpos($uri, '/api/library/') === 0) {
 
 // Static file serving
 if ($uri === '/' || $uri === '') {
-    $uri = '/demo/index.html';
+    $uri = '/web/index.html';
 }
 
 // URL decode for filenames with spaces
