@@ -6,8 +6,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 chartForge - Chart builder web-app for worship-style music.
 
-**Primary Repository**: https://github.com/michaelleemusic/chartForge
-**Auth Method**: SSH keys (all local dev computers have SSH key access)
+**Primary Repository**: git@github.com:michaelleemusic/chartForge.git
+**Auth Method**: SSH keys (all dev machines have SSH key access to GitHub and production server)
+
+### SSH Keys
+Before git push or rsync to production, ensure keys are loaded:
+```bash
+ssh-add ~/.ssh/dreamhost_proflee  # For production deployment
+```
 
 ## Commands
 
@@ -62,7 +68,9 @@ ssh proflee_me@pdx1-shared-a1-17.dreamhost.com "chmod -R 755 ~/proflee.me/chartf
 ```
 chartForge/
 ├── web/                    # Web application (main deliverable)
-│   ├── index.html          # Main interface with renderer
+│   ├── index.html          # HTML structure (~100 lines)
+│   ├── styles.css          # All CSS styles
+│   ├── app.js              # All JavaScript (~1900 lines)
 │   ├── index.php           # PHP backend (DreamHost)
 │   └── server.js           # Node.js backend (local dev)
 ├── src/                    # TypeScript utilities
@@ -102,4 +110,6 @@ chartForge/
 
 ## Key Fonts
 
-Lato (Bold/Regular/Light) for text, loaded from Google Fonts.
+- **PDF Preview**: Lato (default), Roboto, Noto Sans, Libre Caslon Text
+- **Editor Pane**: Roboto
+- Loaded from Google Fonts.
