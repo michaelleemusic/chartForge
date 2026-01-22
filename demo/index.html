@@ -1747,12 +1747,11 @@
       pdf.save(filename);
     });
 
-    // Full Set download (all keys and all display modes as ZIP)
+    // Full Set download (all keys, full and chords modes as ZIP)
     const ALL_KEYS = ['numbers', 'C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
     const ALL_MODES = [
       { value: 'full', label: '' },        // Full chart (no suffix)
-      { value: 'chords', label: 'Chords' }, // Chords only
-      { value: 'lyrics', label: 'Lyrics' }  // Lyrics only
+      { value: 'chords', label: 'Chords' }  // Chords only
     ];
 
     document.getElementById('download-fullset-btn').addEventListener('click', async () => {
