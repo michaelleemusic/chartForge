@@ -48,7 +48,7 @@ chartForge/
 │   ├── types.ts            # Core type definitions
 │   ├── parser.ts           # Format detection, parsing
 │   └── chordUtils.ts       # Chord manipulation
-├── library/                # Song library (677 charts)
+├── library/                # Song library (680 charts, local only)
 │   ├── *.txt               # Chart files
 │   └── index.json          # Searchable index
 ├── scripts/                # Build utilities
@@ -85,3 +85,25 @@ Types:
 - `chore:` Maintenance
 
 Example: `feat: add chord parser for ChordPro format`
+
+## Deployment
+
+### Library Policy
+
+The full song library (680+ charts) is kept in the repository for local development but **not deployed to production**. Only songs listed in `.deployinclude` are uploaded to the public site.
+
+**Why?** Most library songs are copyrighted worship songs used for personal/church reference. The public demo site only includes original test songs.
+
+### Deploy Commands
+
+See `CLAUDE.md` for full deployment instructions. Key points:
+
+1. rsync excludes `library/*.txt` except those in `.deployinclude`
+2. Server-side PHP rebuilds `index.json` with only uploaded songs
+3. The search placeholder dynamically updates to show available song count
+
+### Adding Public Songs
+
+To add a song to the public deployment:
+1. Add the filename to `.deployinclude` (one per line)
+2. Run the deploy commands from `CLAUDE.md`

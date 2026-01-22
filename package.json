@@ -1,6 +1,6 @@
 {
   "name": "chartForge",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Chart builder web-app for worship-style music",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

@@ -1,0 +1,76 @@
+{title: You Are My Refuge}
+{artist: chartForge Test Song}
+{key: G}
+{time: 6/8}
+{tempo: 72}
+
+{section: Intro [2x]}
+{dynamics: piano only}
+[1]   [4/1]   [6m]   [4]
+
+{section: Verse 1}
+In the [1]shadow of Your [4/1]wings I find my rest
+In the [6m]shelter of Your [4]presence I am blessed
+When the [1]waters rise a[5/7]round me
+You're my [6m]fortress, You're my [4]shield
+You are [1]faithful, You are [4]with me
+This is [5]all I [1]need
+
+{section: pre chorus}
+[2m]Favor falls upon us, in the [2aug]shadow of the valley
+
+{section: Chorus}
+[4]You are my refuge, my [1]strength in the storm
+[5/7]All of my [6m]days I am [4]safe in Your [5]arms
+[4]You are my shelter, my [1]hope and my song
+[5/7]I will not [6m]fear, for You [4]never let [5]go
+You [4]never let [1]go
+
+
+{section: Verse 2}
+Be still [1]my soul and [4/1]know that He is God
+He will [6m]fight for me when [4]I cannot go on
+Though a [1]thousand fall be[5/7]side me
+I will [6m]trust in You a[4]lone
+For Your [1]mercy follows [4]after
+And You [5]lead me [1]home
+
+{section: Chorus [6x]}
+[4]You are my refuge, my [1]strength in the storm
+[5/7]All of my [6m]days I am [4]safe in Your [5]arms
+[4]You are my shelter, my [1]hope and my song
+[5/7]I will not [6m]fear, for You [4]never let [5]go
+You [4]never let [1]go
+
+
+{section: Bridge 1 [vamp]}
+And You [5]lead me [1]home
+And You [5]lead me [4m]home
+And You [2]lead me,
+And You [3M]lead me,
+And You [4m/b6]lead me,
+
+{section: Bridge 2]}
+{dynamics: down}
+[1/5]My heart will sing, my [5]soul will praise
+[4]Forever and for[6m]ever
+[4]Your steadfast love, Your [1]endless grace
+[5]Forever and for[6m]ever
+{dynamics: building}
+[4]You are with me, You are [1/3]for me
+[5sus4]Nothing can stand a[6m]gainst me
+[4]You are with me, You are [5]for me
+[1]
+
+{section: Tag}
+{dynamics: huge hits}
+[4]You never let go
+[5]You never let [1]go
+
+{section: Chorus}
+{dynamics: piano only}
+[4]You are my refuge, my [1]strength in the storm
+[5/7]All of my [6m]days I am [4]safe in Your [5]arms
+[4]You are my shelter, my [1]hope and my song
+[5/7]I will not [6m]fear, for You [4]never let [5]go
+You [4]never let [1]go

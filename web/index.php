@@ -51,25 +51,36 @@ function textResponse($text, $code = 200) {
     exit;
 }
 
-// Helper: rebuild library index
+// Helper: rebuild library index (recursive)
 function rebuildIndex($libraryDir) {
-    $files = glob($libraryDir . '/*.txt');
     $index = [];
 
-    foreach ($files as $file) {
-        $content = file_get_contents($file);
-        $filename = basename($file);
+    // Recursively find all .txt files
+    $iterator = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($libraryDir, RecursiveDirectoryIterator::SKIP_DOTS)
+    );
 
-        preg_match('/\{title:\s*(.+?)\}/i', $content, $titleMatch);
-        preg_match('/\{artist:\s*(.+?)\}/i', $content, $artistMatch);
-        preg_match('/\{key:\s*(.+?)\}/i', $content, $keyMatch);
+    foreach ($iterator as $file) {
+        if ($file->isFile() && strtolower($file->getExtension()) === 'txt') {
+            // Skip trash folder
+            if (strpos($file->getPathname(), '/trash/') !== false) continue;
 
-        $index[] = [
-            'title' => isset($titleMatch[1]) ? trim($titleMatch[1]) : str_replace('.txt', '', $filename),
-            'artist' => isset($artistMatch[1]) ? trim($artistMatch[1]) : '',
-            'key' => isset($keyMatch[1]) ? trim($keyMatch[1]) : '',
-            'path' => $filename,
-        ];
+            $content = file_get_contents($file->getPathname());
+
+            // Get path relative to library dir
+            $relativePath = str_replace($libraryDir . '/', '', $file->getPathname());
+
+            preg_match('/\{title:\s*(.+?)\}/i', $content, $titleMatch);
+            preg_match('/\{artist:\s*(.+?)\}/i', $content, $artistMatch);
+            preg_match('/\{key:\s*(.+?)\}/i', $content, $keyMatch);
+
+            $index[] = [
+                'title' => isset($titleMatch[1]) ? trim($titleMatch[1]) : str_replace('.txt', '', basename($file)),
+                'artist' => isset($artistMatch[1]) ? trim($artistMatch[1]) : '',
+                'key' => isset($keyMatch[1]) ? trim($keyMatch[1]) : '',
+                'path' => $relativePath,
+            ];
+        }
     }
 
     usort($index, function($a, $b) {

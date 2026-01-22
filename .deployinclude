@@ -1,0 +1,15 @@
+# Songs to deploy to production (one filename per line)
+# The full library is kept locally but not uploaded to protect copyrighted content
+# Only original/test songs and public domain hymns should be listed here
+
+You Are My Refuge.txt
+
+# Public domain hymns
+hymns/Amazing Grace.txt
+hymns/A Mighty Fortress.txt
+hymns/Be Thou My Vision.txt
+hymns/Come Thou Fount.txt
+hymns/Great Is Thy Faithfulness.txt
+hymns/Holy Holy Holy.txt
+hymns/What A Friend We Have In Jesus.txt
+hymns/When I Survey The Wondrous Cross.txt

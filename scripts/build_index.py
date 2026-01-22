@@ -30,12 +30,14 @@ def build_index():
     library_dir = scripts_dir.parent / 'library'
     songs = []
 
-    for txt_file in sorted(library_dir.glob('*.txt')):
-        # Skip if in node_modules or hidden directories
-        if any(part.startswith('.') or part == 'node_modules' for part in txt_file.parts):
+    # Recursive glob for all .txt files
+    for txt_file in sorted(library_dir.glob('**/*.txt')):
+        # Skip trash, hidden directories, node_modules
+        if any(part.startswith('.') or part in ('node_modules', 'trash') for part in txt_file.parts):
             continue
 
-        rel_path = txt_file.name
+        # Path relative to library dir
+        rel_path = str(txt_file.relative_to(library_dir))
 
         try:
             content = txt_file.read_text(encoding='utf-8')

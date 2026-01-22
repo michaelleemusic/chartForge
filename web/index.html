@@ -200,17 +200,61 @@
       overflow: hidden;
     }
 
-    #input {
+    .editor-wrapper {
+      position: relative;
       flex: 1;
+      overflow: hidden;
+    }
+
+    #backdrop, #input {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
-      font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
-      font-size: 13px;
-      line-height: 1.5;
+      height: 100%;
+      font-family: 'Lato', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 14px;
+      line-height: 1.7;
       padding: 16px;
+      margin: 0;
       border: none;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
+    #backdrop {
+      background: #fafafa;
+      color: transparent;
+      pointer-events: none;
+      overflow: auto;
+    }
+
+    #backdrop code {
+      font-family: inherit;
+      color: #2c2c2c;
+    }
+
+    #input {
+      background: transparent;
+      color: transparent;
+      caret-color: #333;
       resize: none;
       outline: none;
+      overflow: auto;
+      z-index: 1;
     }
+
+    /* Syntax highlighting styles */
+    .hl-directive { color: #7a5a9e; font-weight: 600; }
+    .hl-directive-key { color: #7a5a9e; font-weight: 600; }
+    .hl-directive-value { color: #2e7d6e; font-weight: 400; }
+    .hl-brace { color: #a8a8a8; }
+    .hl-section { color: #c75d2c; font-weight: 700; }
+    .hl-section-name { color: #c75d2c; font-weight: 400; }
+    .hl-chord { color: #6b7c93; font-weight: 500; }
+    .hl-bracket { color: #b8c4ce; }
+    .hl-lyric { color: #1a1a1a; font-weight: 400; }
 
     .error {
       color: #d32f2f;
@@ -389,7 +433,10 @@
         </select>
       </div>
       <div class="editor-content">
-        <textarea id="input"></textarea>
+        <div class="editor-wrapper">
+          <pre id="backdrop" aria-hidden="true"><code id="highlight"></code></pre>
+          <textarea id="input" spellcheck="false"></textarea>
+        </div>
         <div class="error" id="error"></div>
       </div>
     </div>
@@ -572,7 +619,13 @@
               break;
             case 'dynamics':
               if (currentSection) {
-                currentSection.dynamics = value;
+                if (currentSection.lines.length === 0) {
+                  // Section header dynamics
+                  currentSection.dynamics = value;
+                } else {
+                  // Mid-section dynamics - add as inline line
+                  currentSection.lines.push({ type: 'dynamics', text: value });
+                }
               } else {
                 pendingDynamics = value;
               }
@@ -822,6 +875,17 @@
           let lineCount = 0;
           for (let i = 0; i < section.lines.length; i++) {
             const line = section.lines[i];
+
+            // Handle dynamics lines
+            if (line.type === 'dynamics') {
+              if (lineCount > 0) {
+                height += this.config.spacing.betweenLines;
+              }
+              lineCount++;
+              height += this.config.fonts.dynamics.size * this.config.fonts.dynamics.lineHeight;
+              continue;
+            }
+
             const hasChords = line.chords && line.chords.length > 0;
             const hasLyrics = line.lyrics && line.lyrics.trim().length > 0;
 
@@ -944,7 +1008,10 @@
           ctx.font = `${config.fonts.metadata.weight} ${config.fonts.metadata.size}px ${config.fonts.metadata.family}`;
           ctx.textAlign = 'right';
           const meta = [];
-          if (this.song.key) meta.push(`Key: ${this.song.key.replace(/b/g, '♭').replace(/#/g, '♯')}`);
+          if (this.song.key) {
+            const keyLabel = this.config.numbersMode ? 'Original Key' : 'Key';
+            meta.push(`${keyLabel}: ${this.song.key.replace(/b/g, '♭').replace(/#/g, '♯')}`);
+          }
           if (this.song.tempo) meta.push(`Tempo: ${this.song.tempo}`);
           if (this.song.timeSignature) meta.push(`Meter: ${this.song.timeSignature}`);
           ctx.fillText(meta.join('  '), config.page.width - config.margins.right, y);
@@ -1221,6 +1288,18 @@
         const config = this.config;
         const displayMode = config.displayMode || 'full';
         let currentY = y;
+
+        // Handle dynamics lines (mid-section dynamics)
+        if (line.type === 'dynamics') {
+          ctx.font = `${config.fonts.dynamics.weight} ${config.fonts.dynamics.size}px ${config.fonts.dynamics.family}`;
+          ctx.fillStyle = config.colors.textMuted;
+          ctx.textAlign = 'right';
+          ctx.textBaseline = 'top';
+          ctx.fillText(line.text, x + width, currentY);
+          currentY += config.fonts.dynamics.size * config.fonts.dynamics.lineHeight;
+          return currentY - y;
+        }
+
         const hasChords = line.chords && line.chords.length > 0;
         const hasLyrics = line.lyrics && line.lyrics.trim().length > 0;
 
@@ -1458,6 +1537,8 @@
 
     // Demo app
     const inputEl = document.getElementById('input');
+    const backdropEl = document.getElementById('backdrop');
+    const highlightEl = document.getElementById('highlight');
     const canvas = document.getElementById('chart-canvas');
     const errorEl = document.getElementById('error');
     const prevBtn = document.getElementById('prev-btn');
@@ -1466,6 +1547,51 @@
 
     let renderer = new ChartRenderer();
     let currentPage = 0;
+
+    // Syntax highlighting for the editor
+    function highlightSyntax(text) {
+      // Escape HTML
+      let html = text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+
+      // Highlight directives: {key: value}
+      html = html.replace(
+        /(\{)(title|artist|key|tempo|time)(:)([^}]*)(\})/gi,
+        '<span class="hl-brace">$1</span><span class="hl-directive-key">$2</span><span class="hl-brace">$3</span><span class="hl-directive-value">$4</span><span class="hl-brace">$5</span>'
+      );
+
+      // Highlight sections: {section: Name}
+      html = html.replace(
+        /(\{)(section)(:)([^}]*)(\})/gi,
+        '<span class="hl-brace">$1</span><span class="hl-section">$2</span><span class="hl-brace">$3</span><span class="hl-section-name">$4</span><span class="hl-brace">$5</span>'
+      );
+
+      // Highlight dynamics: {dynamics: value}
+      html = html.replace(
+        /(\{)(dynamics)(:)([^}]*)(\})/gi,
+        '<span class="hl-brace">$1</span><span class="hl-directive-key">$2</span><span class="hl-brace">$3</span><span class="hl-directive-value">$4</span><span class="hl-brace">$5</span>'
+      );
+
+      // Highlight chords: [chord]
+      html = html.replace(
+        /(\[)([^\]]+)(\])/g,
+        '<span class="hl-bracket">$1</span><span class="hl-chord">$2</span><span class="hl-bracket">$3</span>'
+      );
+
+      return html;
+    }
+
+    function syncHighlight() {
+      highlightEl.innerHTML = highlightSyntax(inputEl.value) + '\n';
+    }
+
+    // Sync scroll between textarea and backdrop
+    inputEl.addEventListener('scroll', () => {
+      backdropEl.scrollTop = inputEl.scrollTop;
+      backdropEl.scrollLeft = inputEl.scrollLeft;
+    });
 
     function updatePageControls() {
       const pageCount = renderer.layout ? renderer.layout.pageCount : 1;
@@ -1492,8 +1618,11 @@
       }
     }
 
-    // Realtime rendering on textarea input
-    inputEl.addEventListener('input', render);
+    // Realtime rendering and highlighting on textarea input
+    inputEl.addEventListener('input', () => {
+      syncHighlight();
+      render();
+    });
 
     // Auto-complete: numbers wrap in [], { completes to {}
     inputEl.addEventListener('keydown', (e) => {
@@ -1503,17 +1632,21 @@
 
       // Auto-wrap numbers in brackets
       if (e.key >= '0' && e.key <= '9') {
-        // Check if already inside brackets
+        // Check if already inside brackets or braces
         const beforeCursor = value.substring(0, start);
         const lastOpen = beforeCursor.lastIndexOf('[');
         const lastClose = beforeCursor.lastIndexOf(']');
         const insideBrackets = lastOpen > lastClose;
+        const lastBraceOpen = beforeCursor.lastIndexOf('{');
+        const lastBraceClose = beforeCursor.lastIndexOf('}');
+        const insideBraces = lastBraceOpen > lastBraceClose;
 
-        if (!insideBrackets) {
+        if (!insideBrackets && !insideBraces) {
           e.preventDefault();
           const newValue = value.substring(0, start) + '[' + e.key + ']' + value.substring(end);
           inputEl.value = newValue;
           inputEl.selectionStart = inputEl.selectionEnd = start + 2; // After the number, before ]
+          syncHighlight();
           render();
         }
       }
@@ -1524,6 +1657,7 @@
         const newValue = value.substring(0, start) + '{}' + value.substring(end);
         inputEl.value = newValue;
         inputEl.selectionStart = inputEl.selectionEnd = start + 1; // Between { and }
+        syncHighlight();
         render();
       }
     });
@@ -1573,6 +1707,7 @@
         const content = await response.text();
         inputEl.value = content;
         currentSongPath = path;
+        syncHighlight();
         render();
         songSearchEl.value = '';
         hideSearchResults();
@@ -1615,6 +1750,7 @@
 `;
       inputEl.value = template;
       currentSongPath = null;
+      syncHighlight();
       render();
       updateButtonStates();
     }
@@ -2141,6 +2277,9 @@
         if (selectedKey !== 'numbers') {
           song = convertSongToLetters(song, selectedKey);
           song.key = selectedKey;
+          renderer.config.numbersMode = false;
+        } else {
+          renderer.config.numbersMode = true;
         }
 
         renderer.loadSong(song);
@@ -2159,19 +2298,23 @@
         ...song,
         sections: song.sections.map(section => ({
           ...section,
-          lines: section.lines.map(line => ({
-            ...line,
-            chords: line.chords.map(cp => ({
-              ...cp,
-              chord: convertChordToLetter(cp.chord, key)
-            }))
-          }))
+          lines: section.lines.map(line => {
+            // Skip dynamics lines (no chords to convert)
+            if (line.type === 'dynamics') return line;
+            return {
+              ...line,
+              chords: (line.chords || []).map(cp => ({
+                ...cp,
+                chord: convertChordToLetter(cp.chord, key)
+              }))
+            };
+          })
         }))
       };
     }
 
-    // Initial load - fetch Test Song from library
-    loadSong('Test Song.txt');
+    // Initial load - fetch default song from library
+    loadSong('You Are My Refuge.txt');
     updateButtonStates();
   </script>
 </body>
