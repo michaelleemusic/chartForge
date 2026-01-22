@@ -1737,18 +1737,30 @@
       const title = extractTitle(inputEl.value);
       const pageCount = renderer.layout.pageCount;
 
+      // Create high-res canvas for PDF export (3x for print quality)
+      const exportScale = 3;
+      const exportCanvas = document.createElement('canvas');
+      const { width, height } = renderer.config.page;
+      exportCanvas.width = width * exportScale;
+      exportCanvas.height = height * exportScale;
+
+      // Temporarily override pixel ratio for high-res rendering
+      const originalRatio = renderer.pixelRatio;
+      renderer.pixelRatio = exportScale;
+
       for (let i = 0; i < pageCount; i++) {
         if (i > 0) pdf.addPage();
 
-        // Render page to canvas
-        renderer.renderPage(canvas, i);
+        // Render page to high-res canvas
+        renderer.renderPage(exportCanvas, i);
 
         // Add canvas as image to PDF (JPEG for smaller file size)
-        const imgData = canvas.toDataURL('image/jpeg', 0.92);
-        pdf.addImage(imgData, 'JPEG', 0, 0, renderer.config.page.width, renderer.config.page.height);
+        const imgData = exportCanvas.toDataURL('image/jpeg', 0.92);
+        pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
       }
 
-      // Restore current page view
+      // Restore original pixel ratio and redraw preview
+      renderer.pixelRatio = originalRatio;
       renderer.renderPage(canvas, currentPage);
 
       // Download with key and mode in filename
@@ -1780,6 +1792,17 @@
       const originalText = btn.innerHTML;
       btn.disabled = true;
 
+      // Create high-res canvas for PDF export (3x for print quality)
+      const exportScale = 3;
+      const exportCanvas = document.createElement('canvas');
+      const { width, height } = renderer.config.page;
+      exportCanvas.width = width * exportScale;
+      exportCanvas.height = height * exportScale;
+
+      // Save and override pixel ratio for high-res rendering
+      const originalRatio = renderer.pixelRatio;
+      renderer.pixelRatio = exportScale;
+
       const totalFiles = ALL_KEYS.length * ALL_MODES.length;
       let fileCount = 0;
 
@@ -1808,14 +1831,14 @@
           const pdf = new jsPDF({
             orientation: 'portrait',
             unit: 'pt',
-            format: [renderer.config.page.width, renderer.config.page.height]
+            format: [width, height]
           });
 
           for (let i = 0; i < pageCount; i++) {
             if (i > 0) pdf.addPage();
-            renderer.renderPage(canvas, i);
-            const imgData = canvas.toDataURL('image/jpeg', 0.92);
-            pdf.addImage(imgData, 'JPEG', 0, 0, renderer.config.page.width, renderer.config.page.height);
+            renderer.renderPage(exportCanvas, i);
+            const imgData = exportCanvas.toDataURL('image/jpeg', 0.92);
+            pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
           }
 
           const keyLabel = key === 'numbers' ? 'Numbers' : key;
@@ -1827,6 +1850,9 @@
           await new Promise(r => setTimeout(r, 10));
         }
       }
+
+      // Restore original pixel ratio
+      renderer.pixelRatio = originalRatio;
 
       // Restore original view
       render();
