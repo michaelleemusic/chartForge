@@ -1,9 +1,8 @@
 /**
- * chartForge - Chord Chart Parser and Renderer
+ * chartForge - Chord Chart Parser and Utilities
  *
- * A TypeScript library for parsing chord charts in multiple formats,
- * converting between letter and number notation, and rendering
- * professional-quality chord charts.
+ * TypeScript utilities for parsing chord charts in multiple formats
+ * and converting between letter and number notation.
  */
 
 // Export all types
@@ -38,6 +37,3 @@ export {
   getMajorScale,
   getEnharmonic
 } from './chordUtils';
-
-// Export renderer module
-export * from './renderer';
