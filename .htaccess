@@ -3,6 +3,9 @@ RewriteEngine On
 # Route root to web/index.html
 RewriteRule ^$ web/index.html [L]
 
+# Route static assets (css, js) to web/ folder
+RewriteRule ^(styles\.css|app\.js)$ web/$1 [L]
+
 # Route API requests through PHP
 RewriteRule ^api/(.*)$ web/index.php [L,QSA]
 

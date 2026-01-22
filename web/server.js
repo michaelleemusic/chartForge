@@ -108,6 +108,9 @@ const server = http.createServer((req, res) => {
   // Static file serving
   let filepath = decodeURIComponent(url.pathname);
   if (filepath === '/') filepath = '/web/index.html';
+  // Rewrite root-level assets to web/ folder (mirrors .htaccess)
+  if (filepath === '/styles.css') filepath = '/web/styles.css';
+  if (filepath === '/app.js') filepath = '/web/app.js';
 
   const fullPath = path.join(ROOT, filepath);
 
