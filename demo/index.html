@@ -1400,8 +1400,9 @@ Yes, I'll [4]worship Your [5]holy na[1]me.
     function updateButtonStates() {
       const updateBtn = document.getElementById('update-btn');
       const deleteBtn = document.getElementById('delete-btn');
-      updateBtn.disabled = !currentSongPath;
       deleteBtn.disabled = !currentSongPath;
+      // Update button always enabled, but changes label
+      updateBtn.textContent = currentSongPath ? 'Update' : 'Save';
     }
 
     // Extract title from chart content
