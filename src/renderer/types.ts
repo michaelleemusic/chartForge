@@ -5,6 +5,14 @@
  */
 
 /**
+ * Display mode for chart rendering.
+ * - 'full': Show both chords and lyrics (default)
+ * - 'chords': Show only chords, no lyrics
+ * - 'lyrics': Show only lyrics, no chords
+ */
+export type DisplayMode = 'full' | 'chords' | 'lyrics';
+
+/**
  * Dimensions in pixels for the rendered chart.
  */
 export interface Dimensions {
@@ -58,6 +66,8 @@ export interface ColorScheme {
  * Complete rendering configuration.
  */
 export interface RenderConfig {
+  /** Display mode: 'full', 'chords', or 'lyrics' */
+  displayMode: DisplayMode;
   /** Page dimensions */
   page: Dimensions;
   /** Page margins */
@@ -173,6 +183,7 @@ export interface RoadmapEntry {
  * Default rendering configuration matching MultiTracks style.
  */
 export const DEFAULT_CONFIG: RenderConfig = {
+  displayMode: 'full',
   page: {
     width: 816,  // 8.5" at 96 DPI
     height: 1056 // 11" at 96 DPI

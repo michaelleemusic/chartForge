@@ -89,7 +89,8 @@ export function measureChordWidth(
 
 /**
  * Render a row of chords (for chord-only lines).
- * Distributes chords evenly across the available width.
+ * In full mode: distributes chords evenly across the available width.
+ * In chords mode: uses compact fixed spacing between chords.
  */
 export function renderChordRow(
   ctx: CanvasRenderingContext2D,
@@ -112,8 +113,14 @@ export function renderChordRow(
   const totalChordWidth = chordWidths.reduce((a, b) => a + b, 0);
 
   // Calculate spacing between chords
+  // In chords-only mode, use compact fixed spacing
+  // In full mode, distribute evenly across width
+  const displayMode = config.displayMode || 'full';
+  const compactSpacing = 24; // Fixed spacing between chords in chords-only mode
   const remainingSpace = availableWidth - totalChordWidth;
-  const spacing = remainingSpace / (chords.length);
+  const spacing = displayMode === 'chords'
+    ? compactSpacing
+    : remainingSpace / chords.length;
 
   // Render each chord
   let currentX = x;

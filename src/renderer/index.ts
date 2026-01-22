@@ -13,6 +13,7 @@ export {
   DEFAULT_CONFIG
 } from './types';
 export type {
+  DisplayMode,
   Dimensions,
   Margins,
   FontConfig,
@@ -28,6 +29,7 @@ export type {
 export {
   calculateLineHeight,
   calculateSectionHeight,
+  sectionHasContent,
   calculateContentArea,
   generateRoadmap,
   getSectionDisplayName,

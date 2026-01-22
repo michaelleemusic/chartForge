@@ -126,6 +126,7 @@ function isChordOnlyLine(line: Line): boolean {
 
 /**
  * Render a single line (chord + lyrics pair).
+ * Respects displayMode: 'full', 'chords', or 'lyrics'.
  */
 function renderLine(
   ctx: CanvasRenderingContext2D,
@@ -135,10 +136,42 @@ function renderLine(
   width: number,
   config: RenderConfig
 ): number {
+  const displayMode = config.displayMode || 'full';
   let currentY = y;
   const hasChords = line.chords.length > 0;
   const hasLyrics = line.lyrics && line.lyrics.trim().length > 0;
 
+  // In chords mode, skip lines without chords
+  if (displayMode === 'chords' && !hasChords) {
+    return 0;
+  }
+
+  // In lyrics mode, skip lines without lyrics
+  if (displayMode === 'lyrics' && !hasLyrics) {
+    return 0;
+  }
+
+  // Chords-only mode: render only chords
+  if (displayMode === 'chords') {
+    const chords = line.chords.map(cp => cp.chord);
+    const chordY = currentY + config.fonts.chordRoot.size;
+    renderChordRow(ctx, chords, x, chordY, width, config);
+    currentY += config.fonts.chordRoot.size * config.fonts.chordRoot.lineHeight;
+    return currentY - y;
+  }
+
+  // Lyrics-only mode: render only lyrics
+  if (displayMode === 'lyrics') {
+    ctx.font = `${config.fonts.lyrics.weight} ${config.fonts.lyrics.size}px ${config.fonts.lyrics.family}`;
+    ctx.fillStyle = config.colors.textSecondary;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    ctx.fillText(line.lyrics!, x, currentY);
+    currentY += config.fonts.lyrics.size * config.fonts.lyrics.lineHeight;
+    return currentY - y;
+  }
+
+  // Full mode: render both chords and lyrics
   if (isChordOnlyLine(line)) {
     // Chord-only line: distribute chords evenly
     const chords = line.chords.map(cp => cp.chord);
@@ -180,6 +213,7 @@ function renderLine(
 
 /**
  * Render a complete section.
+ * In chords-only mode, consolidates all chords into rows of 4.
  */
 export function renderSection(
   ctx: CanvasRenderingContext2D,
@@ -189,6 +223,7 @@ export function renderSection(
 ): number {
   const { x, y, width } = options;
   let currentY = y;
+  const displayMode = config.displayMode || 'full';
 
   // Render section header
   const headerHeight = renderSectionHeader(ctx, section, options, config);
@@ -201,14 +236,53 @@ export function renderSection(
     currentY += 4; // Small gap after header for dynamics
   }
 
-  // Render each line
-  for (let i = 0; i < section.lines.length; i++) {
-    const lineHeight = renderLine(ctx, section.lines[i], x, currentY, width, config);
-    currentY += lineHeight;
+  // In chords-only mode, consolidate all chords into rows of 4
+  if (displayMode === 'chords') {
+    const allChords: import('../../types').Chord[] = [];
+    for (const line of section.lines) {
+      if (line.chords && line.chords.length > 0) {
+        for (const cp of line.chords) {
+          allChords.push(cp.chord);
+        }
+      }
+    }
 
-    if (i < section.lines.length - 1) {
+    const chordsPerRow = 4;
+    let renderedRowCount = 0;
+    for (let i = 0; i < allChords.length; i += chordsPerRow) {
+      const rowChords = allChords.slice(i, i + chordsPerRow);
+
+      if (renderedRowCount > 0) {
+        currentY += 2; // Compact line spacing for chord rows
+      }
+
+      const chordY = currentY + config.fonts.chordRoot.size;
+      renderChordRow(ctx, rowChords, x, chordY, width, config);
+      currentY += config.fonts.chordRoot.size * config.fonts.chordRoot.lineHeight;
+      renderedRowCount++;
+    }
+
+    return currentY - y;
+  }
+
+  // Full or lyrics mode: render each line normally
+  let renderedLineCount = 0;
+  for (let i = 0; i < section.lines.length; i++) {
+    const line = section.lines[i];
+    const hasChords = line.chords && line.chords.length > 0;
+    const hasLyrics = line.lyrics && line.lyrics.trim().length > 0;
+
+    // Skip lines that won't render in this mode
+    if (displayMode === 'lyrics' && !hasLyrics) continue;
+
+    // Add spacing between lines (before the line, not after)
+    if (renderedLineCount > 0) {
       currentY += config.spacing.betweenLines;
     }
+
+    const lineHeight = renderLine(ctx, line, x, currentY, width, config);
+    currentY += lineHeight;
+    renderedLineCount++;
   }
 
   return currentY - y;
@@ -216,36 +290,76 @@ export function renderSection(
 
 /**
  * Calculate the height of a section without rendering.
+ * Respects displayMode: 'full', 'chords', or 'lyrics'.
+ * Always includes header height - sections are always shown for structure.
  */
 export function calculateSectionHeight(
   section: Section,
   config: RenderConfig = DEFAULT_CONFIG
 ): number {
+  const displayMode = config.displayMode || 'full';
+
+  // Always include header height - sections always show for structure
   let height = config.badgeRadius * 2 + 6; // Header height
 
   if (section.dynamics) {
     height += 4;
   }
 
+  // In chords mode, consolidate all chords into rows of 4
+  if (displayMode === 'chords') {
+    let totalChords = 0;
+    for (const line of section.lines) {
+      if (line.chords && line.chords.length > 0) {
+        totalChords += line.chords.length;
+      }
+    }
+
+    const chordsPerRow = 4;
+    const rowCount = Math.ceil(totalChords / chordsPerRow);
+
+    for (let i = 0; i < rowCount; i++) {
+      if (i > 0) {
+        height += 2; // Compact line spacing
+      }
+      height += config.fonts.chordRoot.size * config.fonts.chordRoot.lineHeight;
+    }
+
+    return height;
+  }
+
+  // Lyrics mode or full mode
+  let lineCount = 0;
   for (let i = 0; i < section.lines.length; i++) {
     const line = section.lines[i];
     const hasChords = line.chords.length > 0;
     const hasLyrics = line.lyrics && line.lyrics.trim().length > 0;
 
-    if (isChordOnlyLine(line)) {
-      height += config.fonts.chordRoot.size * config.fonts.chordRoot.lineHeight;
-    } else if (hasChords && hasLyrics) {
-      height += config.fonts.chordRoot.size * config.fonts.chordRoot.lineHeight;
-      height += config.spacing.chordToLyric;
-      height += config.fonts.lyrics.size * config.fonts.lyrics.lineHeight;
-    } else if (hasLyrics) {
-      height += config.fonts.lyrics.size * config.fonts.lyrics.lineHeight;
-    } else if (hasChords) {
-      height += config.fonts.chordRoot.size * config.fonts.chordRoot.lineHeight;
-    }
+    // Skip lines based on display mode
+    if (displayMode === 'lyrics' && !hasLyrics) continue;
 
-    if (i < section.lines.length - 1) {
+    // Add spacing between lines
+    if (lineCount > 0) {
       height += config.spacing.betweenLines;
+    }
+    lineCount++;
+
+    // Calculate line height based on display mode
+    if (displayMode === 'lyrics') {
+      height += config.fonts.lyrics.size * config.fonts.lyrics.lineHeight;
+    } else {
+      // Full mode
+      if (isChordOnlyLine(line)) {
+        height += config.fonts.chordRoot.size * config.fonts.chordRoot.lineHeight;
+      } else if (hasChords && hasLyrics) {
+        height += config.fonts.chordRoot.size * config.fonts.chordRoot.lineHeight;
+        height += config.spacing.chordToLyric;
+        height += config.fonts.lyrics.size * config.fonts.lyrics.lineHeight;
+      } else if (hasLyrics) {
+        height += config.fonts.lyrics.size * config.fonts.lyrics.lineHeight;
+      } else if (hasChords) {
+        height += config.fonts.chordRoot.size * config.fonts.chordRoot.lineHeight;
+      }
     }
   }
 

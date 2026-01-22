@@ -55,7 +55,7 @@ export function renderHeader(
     ctx.textAlign = 'left';
     ctx.fillText(song.artist, config.margins.left, y);
 
-    // Metadata (right aligned): Key, Tempo, Time
+    // Metadata (right aligned): Key, Tempo, Meter
     ctx.font = `${config.fonts.metadata.weight} ${config.fonts.metadata.size}px ${config.fonts.metadata.family}`;
     ctx.textAlign = 'right';
 
@@ -67,7 +67,7 @@ export function renderHeader(
       metaParts.push(`Tempo: ${song.tempo}`);
     }
     if (song.timeSignature) {
-      metaParts.push(`Time: ${song.timeSignature}`);
+      metaParts.push(`Meter: ${song.timeSignature}`);
     }
 
     const metaText = metaParts.join('  ');

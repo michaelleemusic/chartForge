@@ -293,6 +293,30 @@
       flex-shrink: 0;
     }
 
+    .preview-header select {
+      padding: 6px 28px 6px 10px;
+      font-size: 13px;
+      border: 1px solid #666;
+      border-radius: 6px;
+      background: #4a4a4a;
+      color: white;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ccc' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+    }
+
+    .preview-header select:hover {
+      background-color: #5a5a5a;
+      border-color: #777;
+    }
+
+    .preview-header select:focus {
+      outline: none;
+      border-color: #888;
+    }
+
     .preview-container {
       flex: 1;
       display: flex;
@@ -378,6 +402,11 @@
           <span id="page-info">Page 1 of 1</span>
           <button id="next-btn" disabled>Next &rarr;</button>
         </div>
+        <select id="display-mode" title="Display mode">
+          <option value="full">Full Chart</option>
+          <option value="chords">Chords Only</option>
+          <option value="lyrics">Lyrics Only</option>
+        </select>
         <button class="download-btn" id="download-pdf-btn" title="Download PDF">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
@@ -445,6 +474,7 @@
 
     // Default render configuration
     const DEFAULT_CONFIG = {
+      displayMode: 'full', // 'full', 'chords', or 'lyrics'
       page: { width: 816, height: 1056 },
       margins: { top: 40, right: 40, bottom: 60, left: 40 },
       columnGap: 30,
@@ -708,6 +738,11 @@
           const section = this.song.sections[i];
           const sectionHeight = this.calculateSectionHeight(section);
 
+          // Skip sections with no content for this display mode
+          if (sectionHeight === 0) {
+            continue;
+          }
+
           // If section doesn't fit and we're not at top, move to next column/page
           if (columnY > 0 && columnY + sectionHeight > columnHeight) {
             advanceColumn();
@@ -741,7 +776,14 @@
       }
 
       calculateSectionHeight(section) {
-        const boxPadding = { top: 8, bottom: 10 };
+        const displayMode = this.config.displayMode || 'full';
+        // Compact padding for chords-only mode
+        const boxPadding = displayMode === 'chords'
+          ? { top: 4, bottom: 6 }
+          : { top: 8, bottom: 10 };
+
+        // Always include sections - performers need to see structure
+        // (e.g., vocalist needs to know there's an intro even with no lyrics)
 
         // Header (badge height)
         let height = this.config.badgeRadius * 2;
@@ -754,25 +796,60 @@
           height += this.config.fonts.dynamics.size * this.config.fonts.dynamics.lineHeight + 4;
         }
 
-        // Content lines
-        for (let i = 0; i < section.lines.length; i++) {
-          const line = section.lines[i];
-          const hasChords = line.chords && line.chords.length > 0;
-          const hasLyrics = line.lyrics && line.lyrics.trim().length > 0;
-          const isChordOnly = hasChords && !hasLyrics;
-
-          if (isChordOnly) {
-            height += this.config.fonts.chordRoot.size * this.config.fonts.chordRoot.lineHeight;
-          } else if (hasChords && hasLyrics) {
-            height += this.config.fonts.chordRoot.size * this.config.fonts.chordRoot.lineHeight;
-            height += this.config.spacing.chordToLyric;
-            height += this.config.fonts.lyrics.size * this.config.fonts.lyrics.lineHeight;
-          } else if (hasLyrics) {
-            height += this.config.fonts.lyrics.size * this.config.fonts.lyrics.lineHeight;
+        // In chords-only mode, consolidate all chords into rows of 4
+        if (displayMode === 'chords') {
+          // Count total chords
+          let totalChords = 0;
+          for (const line of section.lines) {
+            if (line.chords) {
+              totalChords += line.chords.length;
+            }
           }
 
-          if (i < section.lines.length - 1) {
-            height += this.config.spacing.betweenLines;
+          // Calculate number of rows (4 chords per row)
+          const chordsPerRow = 4;
+          const rowCount = Math.ceil(totalChords / chordsPerRow);
+
+          // Add height for each row
+          for (let i = 0; i < rowCount; i++) {
+            if (i > 0) {
+              height += 2; // Compact line spacing
+            }
+            height += this.config.fonts.chordRoot.size * this.config.fonts.chordRoot.lineHeight;
+          }
+        } else {
+          // Full or lyrics mode - calculate line by line
+          let lineCount = 0;
+          for (let i = 0; i < section.lines.length; i++) {
+            const line = section.lines[i];
+            const hasChords = line.chords && line.chords.length > 0;
+            const hasLyrics = line.lyrics && line.lyrics.trim().length > 0;
+
+            // Skip lines based on display mode
+            if (displayMode === 'lyrics' && !hasLyrics) continue;
+
+            // Add spacing between lines
+            if (lineCount > 0) {
+              height += this.config.spacing.betweenLines;
+            }
+            lineCount++;
+
+            // Calculate line height based on display mode
+            if (displayMode === 'lyrics') {
+              height += this.config.fonts.lyrics.size * this.config.fonts.lyrics.lineHeight;
+            } else {
+              // Full mode
+              const isChordOnly = hasChords && !hasLyrics;
+              if (isChordOnly) {
+                height += this.config.fonts.chordRoot.size * this.config.fonts.chordRoot.lineHeight;
+              } else if (hasChords && hasLyrics) {
+                height += this.config.fonts.chordRoot.size * this.config.fonts.chordRoot.lineHeight;
+                height += this.config.spacing.chordToLyric;
+                height += this.config.fonts.lyrics.size * this.config.fonts.lyrics.lineHeight;
+              } else if (hasLyrics) {
+                height += this.config.fonts.lyrics.size * this.config.fonts.lyrics.lineHeight;
+              }
+            }
           }
         }
 
@@ -853,7 +930,7 @@
           const meta = [];
           if (this.song.key) meta.push(`Key: ${this.song.key.replace(/b/g, '♭').replace(/#/g, '♯')}`);
           if (this.song.tempo) meta.push(`Tempo: ${this.song.tempo}`);
-          if (this.song.timeSignature) meta.push(`Time: ${this.song.timeSignature}`);
+          if (this.song.timeSignature) meta.push(`Meter: ${this.song.timeSignature}`);
           ctx.fillText(meta.join('  '), config.page.width - config.margins.right, y);
 
           y += config.fonts.artist.size * config.fonts.artist.lineHeight;
@@ -1030,13 +1107,53 @@
         // Render lines with left padding
         const contentX = x + boxPadding.left;
         const contentWidth = width - boxPadding.left - boxPadding.right;
+        const displayMode = config.displayMode || 'full';
 
-        for (let i = 0; i < section.lines.length; i++) {
-          const line = section.lines[i];
-          currentY += this.renderLine(ctx, line, contentX, currentY, contentWidth);
+        // In chords-only mode, consolidate chords into rows of 4
+        if (displayMode === 'chords') {
+          // Collect all chords from all lines
+          const allChords = [];
+          for (const line of section.lines) {
+            if (line.chords && line.chords.length > 0) {
+              for (const cp of line.chords) {
+                allChords.push(cp.chord);
+              }
+            }
+          }
 
-          if (i < section.lines.length - 1) {
-            currentY += config.spacing.betweenLines;
+          // Group into rows of 4 chords
+          const chordsPerRow = 4;
+          let renderedRowCount = 0;
+          for (let i = 0; i < allChords.length; i += chordsPerRow) {
+            const rowChords = allChords.slice(i, i + chordsPerRow);
+
+            if (renderedRowCount > 0) {
+              currentY += 2; // Compact line spacing
+            }
+
+            const chordY = currentY + config.fonts.chordRoot.size;
+            this.renderChordRow(ctx, rowChords, contentX, chordY, contentWidth);
+            currentY += config.fonts.chordRoot.size * config.fonts.chordRoot.lineHeight;
+            renderedRowCount++;
+          }
+        } else {
+          // Full or lyrics mode - render line by line
+          let renderedLineCount = 0;
+          for (let i = 0; i < section.lines.length; i++) {
+            const line = section.lines[i];
+            const hasChords = line.chords && line.chords.length > 0;
+            const hasLyrics = line.lyrics && line.lyrics.trim().length > 0;
+
+            // Skip lines based on display mode
+            if (displayMode === 'lyrics' && !hasLyrics) continue;
+
+            // Add spacing between lines (before the line, not after)
+            if (renderedLineCount > 0) {
+              currentY += config.spacing.betweenLines;
+            }
+
+            currentY += this.renderLine(ctx, line, contentX, currentY, contentWidth);
+            renderedLineCount++;
           }
         }
 
@@ -1086,9 +1203,35 @@
 
       renderLine(ctx, line, x, y, width) {
         const config = this.config;
+        const displayMode = config.displayMode || 'full';
         let currentY = y;
         const hasChords = line.chords && line.chords.length > 0;
         const hasLyrics = line.lyrics && line.lyrics.trim().length > 0;
+
+        // Skip lines based on display mode
+        if (displayMode === 'chords' && !hasChords) return 0;
+        if (displayMode === 'lyrics' && !hasLyrics) return 0;
+
+        // Chords-only mode: render only chords
+        if (displayMode === 'chords') {
+          const chordY = currentY + config.fonts.chordRoot.size;
+          this.renderChordRow(ctx, line.chords.map(c => c.chord), x, chordY, width);
+          currentY += config.fonts.chordRoot.size * config.fonts.chordRoot.lineHeight;
+          return currentY - y;
+        }
+
+        // Lyrics-only mode: render only lyrics
+        if (displayMode === 'lyrics') {
+          ctx.font = `${config.fonts.lyrics.weight} ${config.fonts.lyrics.size}px ${config.fonts.lyrics.family}`;
+          ctx.fillStyle = config.colors.textSecondary;
+          ctx.textAlign = 'left';
+          ctx.textBaseline = 'top';
+          ctx.fillText(line.lyrics, x, currentY);
+          currentY += config.fonts.lyrics.size * config.fonts.lyrics.lineHeight;
+          return currentY - y;
+        }
+
+        // Full mode: render both
         const isChordOnly = hasChords && !hasLyrics;
 
         if (isChordOnly) {
@@ -1186,7 +1329,14 @@
 
         const chordWidths = chords.map(c => this.measureChordWidth(ctx, c));
         const totalWidth = chordWidths.reduce((a, b) => a + b, 0);
-        const spacing = (width - totalWidth) / chords.length;
+
+        // In chords-only mode, use compact fixed spacing
+        // In full mode, distribute evenly across width
+        const displayMode = this.config.displayMode || 'full';
+        const compactSpacing = 24; // Fixed spacing between chords in chords-only mode
+        const spacing = displayMode === 'chords'
+          ? compactSpacing
+          : (width - totalWidth) / chords.length;
 
         let currentX = x;
         for (let i = 0; i < chords.length; i++) {
@@ -1588,15 +1738,22 @@
       // Restore current page view
       renderer.renderPage(canvas, currentPage);
 
-      // Download with key in filename
+      // Download with key and mode in filename
       const safeTitle = title.replace(/[^a-zA-Z0-9\s]/g, '').trim();
       const keyLabel = renderKeySelect.value === 'numbers' ? 'Numbers' : renderKeySelect.value;
-      const filename = `${safeTitle} - ${keyLabel}.pdf`;
+      const modeLabel = displayModeSelect.value === 'full' ? '' :
+                        displayModeSelect.value === 'chords' ? ' - Chords' : ' - Lyrics';
+      const filename = `${safeTitle} - ${keyLabel}${modeLabel}.pdf`;
       pdf.save(filename);
     });
 
-    // Full Set download (all keys as ZIP)
+    // Full Set download (all keys and all display modes as ZIP)
     const ALL_KEYS = ['numbers', 'C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
+    const ALL_MODES = [
+      { value: 'full', label: '' },        // Full chart (no suffix)
+      { value: 'chords', label: 'Chords' }, // Chords only
+      { value: 'lyrics', label: 'Lyrics' }  // Lyrics only
+    ];
 
     document.getElementById('download-fullset-btn').addEventListener('click', async () => {
       const input = inputEl.value;
@@ -1611,9 +1768,11 @@
       const originalText = btn.innerHTML;
       btn.disabled = true;
 
+      const totalFiles = ALL_KEYS.length * ALL_MODES.length;
+      let fileCount = 0;
+
       for (let k = 0; k < ALL_KEYS.length; k++) {
         const key = ALL_KEYS[k];
-        btn.textContent = `${k + 1}/${ALL_KEYS.length}...`;
 
         // Convert song to this key
         let song;
@@ -1624,29 +1783,37 @@
           song.key = key;
         }
 
-        // Render and create PDF
-        renderer.loadSong(song);
-        const pageCount = renderer.layout.pageCount;
+        // Generate PDF for each display mode
+        for (const mode of ALL_MODES) {
+          fileCount++;
+          btn.textContent = `${fileCount}/${totalFiles}...`;
 
-        const pdf = new jsPDF({
-          orientation: 'portrait',
-          unit: 'pt',
-          format: [renderer.config.page.width, renderer.config.page.height]
-        });
+          // Set display mode and load song
+          renderer.config.displayMode = mode.value;
+          renderer.loadSong(song);
+          const pageCount = renderer.layout.pageCount;
 
-        for (let i = 0; i < pageCount; i++) {
-          if (i > 0) pdf.addPage();
-          renderer.renderPage(canvas, i);
-          const imgData = canvas.toDataURL('image/png', 1.0);
-          pdf.addImage(imgData, 'PNG', 0, 0, renderer.config.page.width, renderer.config.page.height);
+          const pdf = new jsPDF({
+            orientation: 'portrait',
+            unit: 'pt',
+            format: [renderer.config.page.width, renderer.config.page.height]
+          });
+
+          for (let i = 0; i < pageCount; i++) {
+            if (i > 0) pdf.addPage();
+            renderer.renderPage(canvas, i);
+            const imgData = canvas.toDataURL('image/png', 1.0);
+            pdf.addImage(imgData, 'PNG', 0, 0, renderer.config.page.width, renderer.config.page.height);
+          }
+
+          const keyLabel = key === 'numbers' ? 'Numbers' : key;
+          const modeLabel = mode.label ? ` - ${mode.label}` : '';
+          const pdfFilename = `${safeTitle} - ${keyLabel}${modeLabel}.pdf`;
+          zip.file(pdfFilename, pdf.output('blob'));
+
+          // Allow UI to update
+          await new Promise(r => setTimeout(r, 10));
         }
-
-        const keyLabel = key === 'numbers' ? 'Numbers' : key;
-        const pdfFilename = `${safeTitle} - ${keyLabel}.pdf`;
-        zip.file(pdfFilename, pdf.output('blob'));
-
-        // Allow UI to update
-        await new Promise(r => setTimeout(r, 10));
       }
 
       // Restore original view
@@ -1865,13 +2032,27 @@
       render();
     });
 
-    // Override render to apply key conversion
+    // Display mode control
+    const displayModeSelect = document.getElementById('display-mode');
+
+    displayModeSelect.addEventListener('change', () => {
+      renderer.config.displayMode = displayModeSelect.value;
+      renderer.layout = renderer.calculateLayout();
+      currentPage = 0;
+      renderer.renderPage(canvas, currentPage);
+      updatePageControls();
+    });
+
+    // Override render to apply key conversion and display mode
     const originalRender = render;
     render = function() {
       try {
         errorEl.style.display = 'none';
         const input = inputEl.value;
         let song = parseChordPro(input);
+
+        // Apply display mode
+        renderer.config.displayMode = displayModeSelect.value;
 
         const selectedKey = renderKeySelect.value;
 

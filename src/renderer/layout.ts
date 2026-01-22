@@ -9,29 +9,43 @@ import { RenderConfig, LayoutResult, LayoutSection, RoadmapEntry, DEFAULT_CONFIG
 
 /**
  * Calculate the height needed for a single line (chord + lyric pair).
+ * Takes displayMode into account.
  */
 export function calculateLineHeight(
   line: Line,
   config: RenderConfig = DEFAULT_CONFIG
 ): number {
+  const displayMode = config.displayMode || 'full';
   const hasChords = line.chords.length > 0;
   const hasLyrics = line.lyrics && line.lyrics.trim().length > 0;
 
+  // In chords mode, skip lines that only have lyrics (no chords)
+  if (displayMode === 'chords' && !hasChords) {
+    return 0;
+  }
+
+  // In lyrics mode, skip lines that only have chords (no lyrics)
+  if (displayMode === 'lyrics' && !hasLyrics) {
+    return 0;
+  }
+
   let height = 0;
 
-  if (hasChords) {
+  // Show chords in 'full' and 'chords' modes
+  if (hasChords && displayMode !== 'lyrics') {
     height += config.fonts.chordRoot.size * config.fonts.chordRoot.lineHeight;
   }
 
-  if (hasLyrics) {
-    if (hasChords) {
+  // Show lyrics in 'full' and 'lyrics' modes
+  if (hasLyrics && displayMode !== 'chords') {
+    if (hasChords && displayMode === 'full') {
       height += config.spacing.chordToLyric;
     }
     height += config.fonts.lyrics.size * config.fonts.lyrics.lineHeight;
   }
 
   // If neither chords nor lyrics, provide minimal spacing for empty lines
-  if (!hasChords && !hasLyrics) {
+  if (height === 0 && !hasChords && !hasLyrics) {
     height = config.spacing.betweenLines;
   }
 
@@ -39,12 +53,30 @@ export function calculateLineHeight(
 }
 
 /**
+ * Check if a section has any visible content for the given display mode.
+ * Sections always render (header at minimum) so performers know the structure.
+ */
+export function sectionHasContent(
+  section: Section,
+  config: RenderConfig = DEFAULT_CONFIG
+): boolean {
+  // Sections always render - performers need to see structure
+  // even if a section has no content in the current mode
+  // (e.g., vocalist needs to know there's an intro even with no lyrics)
+  return true;
+}
+
+/**
  * Calculate the total height needed for a section.
+ * Always includes header - sections always show for structure.
  */
 export function calculateSectionHeight(
   section: Section,
   config: RenderConfig = DEFAULT_CONFIG
 ): number {
+  const displayMode = config.displayMode || 'full';
+
+  // Always include header height
   let height = config.spacing.sectionHeaderHeight;
 
   // Add dynamics note height if present
@@ -52,11 +84,38 @@ export function calculateSectionHeight(
     height += config.fonts.dynamics.size * config.fonts.dynamics.lineHeight + 4;
   }
 
-  // Add height for each line
+  // In chords mode, consolidate all chords into rows of 4
+  if (displayMode === 'chords') {
+    let totalChords = 0;
+    for (const line of section.lines) {
+      if (line.chords && line.chords.length > 0) {
+        totalChords += line.chords.length;
+      }
+    }
+
+    const chordsPerRow = 4;
+    const rowCount = Math.ceil(totalChords / chordsPerRow);
+
+    for (let i = 0; i < rowCount; i++) {
+      if (i > 0) {
+        height += 2; // Compact line spacing
+      }
+      height += config.fonts.chordRoot.size * config.fonts.chordRoot.lineHeight;
+    }
+
+    return height;
+  }
+
+  // Full or lyrics mode: add height for each line
+  let lineCount = 0;
   for (let i = 0; i < section.lines.length; i++) {
-    height += calculateLineHeight(section.lines[i], config);
-    if (i < section.lines.length - 1) {
-      height += config.spacing.betweenLines;
+    const lineHeight = calculateLineHeight(section.lines[i], config);
+    if (lineHeight > 0) {
+      if (lineCount > 0) {
+        height += config.spacing.betweenLines;
+      }
+      height += lineHeight;
+      lineCount++;
     }
   }
 
@@ -215,6 +274,11 @@ export function calculateLayout(
   for (let i = 0; i < song.sections.length; i++) {
     const section = song.sections[i];
     const sectionHeight = calculateSectionHeight(section, config);
+
+    // Skip sections with no content for this display mode
+    if (sectionHeight === 0) {
+      continue;
+    }
 
     // If section doesn't fit in remaining space, move to next column/page
     // Exception: if we're at the top of a column, place it anyway (section is just tall)
