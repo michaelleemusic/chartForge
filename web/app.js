@@ -1493,40 +1493,10 @@ contextMenu.addEventListener('click', (e) => {
   let newText;
 
   switch (action) {
-    case 'filter-chords':
-      // Extract only chords from selection, one line of chords per original line
-      newText = selectedText.split('\n').map(line => {
-        const chords = [];
-        const regex = /\[([^\]]+)\]/g;
-        let match;
-        while ((match = regex.exec(line)) !== null) {
-          chords.push('[' + match[1] + ']');
-        }
-        return chords.join(' ');
-      }).filter(line => line.trim()).join('\n');
-      break;
-
-    case 'filter-lyrics':
-      // Extract only lyrics from selection (remove chord brackets)
-      newText = selectedText.split('\n').map(line => {
-        // Skip directive lines
+    case 'copy-chords':
+      // Copy only chords to clipboard (preserve line structure)
+      const chordsText = selectedText.split('\n').map(line => {
         if (line.trim().startsWith('{')) return '';
-        // Remove chords and clean up whitespace
-        return line.replace(/\[[^\]]*\]/g, '').replace(/\s+/g, ' ').trim();
-      }).filter(line => line.trim()).join('\n');
-      break;
-
-    case 'strip-chords':
-      // Remove chords but keep lyrics in place
-      newText = selectedText.replace(/\[[^\]]*\]/g, '');
-      break;
-
-    case 'strip-lyrics':
-      // Remove lyrics but keep chords (preserve line structure)
-      newText = selectedText.split('\n').map(line => {
-        // Keep directive lines as-is
-        if (line.trim().startsWith('{')) return line;
-        // Extract chords only
         const chords = [];
         const regex = /\[([^\]]+)\]/g;
         let match;
@@ -1534,8 +1504,20 @@ contextMenu.addEventListener('click', (e) => {
           chords.push('[' + match[1] + ']');
         }
         return chords.join(' ');
-      }).join('\n');
-      break;
+      }).filter(line => line.trim()).join('\n');
+      navigator.clipboard.writeText(chordsText);
+      contextMenu.hidden = true;
+      return;
+
+    case 'copy-lyrics':
+      // Copy only lyrics to clipboard (remove chords)
+      const lyricsText = selectedText.split('\n').map(line => {
+        if (line.trim().startsWith('{')) return '';
+        return line.replace(/\[[^\]]*\]/g, '').trim();
+      }).filter(line => line.trim()).join('\n');
+      navigator.clipboard.writeText(lyricsText);
+      contextMenu.hidden = true;
+      return;
 
     case 'wrap-section':
       const sectionName = prompt('Section name:', 'Verse');
