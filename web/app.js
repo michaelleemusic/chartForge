@@ -1447,6 +1447,122 @@ const pageInfoEl = document.getElementById('page-info');
 let renderer = new ChartRenderer();
 let currentPage = 0;
 
+// ============================================================================
+// Context Menu for Editor
+// ============================================================================
+
+const contextMenu = document.getElementById('context-menu');
+
+// Show context menu on right-click in textarea
+inputEl.addEventListener('contextmenu', (e) => {
+  e.preventDefault();
+
+  const hasSelection = inputEl.selectionStart !== inputEl.selectionEnd;
+
+  // Position menu at cursor
+  contextMenu.style.left = e.clientX + 'px';
+  contextMenu.style.top = e.clientY + 'px';
+
+  // Enable/disable items based on selection
+  contextMenu.querySelectorAll('.context-menu-item').forEach(item => {
+    item.classList.toggle('disabled', !hasSelection);
+  });
+
+  contextMenu.hidden = false;
+});
+
+// Hide context menu on click elsewhere or Escape
+document.addEventListener('click', () => contextMenu.hidden = true);
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') contextMenu.hidden = true;
+});
+
+// Handle context menu actions
+contextMenu.addEventListener('click', (e) => {
+  const item = e.target.closest('.context-menu-item');
+  if (!item || item.classList.contains('disabled')) return;
+
+  const action = item.dataset.action;
+  const start = inputEl.selectionStart;
+  const end = inputEl.selectionEnd;
+  const text = inputEl.value;
+  const selectedText = text.substring(start, end);
+
+  if (!selectedText) return;
+
+  let newText;
+
+  switch (action) {
+    case 'filter-chords':
+      // Extract only chords from selection, one line of chords per original line
+      newText = selectedText.split('\n').map(line => {
+        const chords = [];
+        const regex = /\[([^\]]+)\]/g;
+        let match;
+        while ((match = regex.exec(line)) !== null) {
+          chords.push('[' + match[1] + ']');
+        }
+        return chords.join(' ');
+      }).filter(line => line.trim()).join('\n');
+      break;
+
+    case 'filter-lyrics':
+      // Extract only lyrics from selection (remove chord brackets)
+      newText = selectedText.split('\n').map(line => {
+        // Skip directive lines
+        if (line.trim().startsWith('{')) return '';
+        // Remove chords and clean up whitespace
+        return line.replace(/\[[^\]]*\]/g, '').replace(/\s+/g, ' ').trim();
+      }).filter(line => line.trim()).join('\n');
+      break;
+
+    case 'strip-chords':
+      // Remove chords but keep lyrics in place
+      newText = selectedText.replace(/\[[^\]]*\]/g, '');
+      break;
+
+    case 'strip-lyrics':
+      // Remove lyrics but keep chords (preserve line structure)
+      newText = selectedText.split('\n').map(line => {
+        // Keep directive lines as-is
+        if (line.trim().startsWith('{')) return line;
+        // Extract chords only
+        const chords = [];
+        const regex = /\[([^\]]+)\]/g;
+        let match;
+        while ((match = regex.exec(line)) !== null) {
+          chords.push('[' + match[1] + ']');
+        }
+        return chords.join(' ');
+      }).join('\n');
+      break;
+
+    case 'wrap-section':
+      const sectionName = prompt('Section name:', 'Verse');
+      if (sectionName) {
+        newText = `{section: ${sectionName}}\n${selectedText}`;
+      } else {
+        return; // User cancelled
+      }
+      break;
+
+    default:
+      return;
+  }
+
+  // Replace selection with new text
+  inputEl.value = text.substring(0, start) + newText + text.substring(end);
+  inputEl.selectionStart = start;
+  inputEl.selectionEnd = start + newText.length;
+  inputEl.focus();
+
+  // Trigger re-render
+  syncHighlight();
+  render();
+
+  contextMenu.hidden = true;
+});
+
 // Syntax highlighting for the editor
 function highlightSyntax(text) {
   // Escape HTML
