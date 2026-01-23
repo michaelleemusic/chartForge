@@ -102,10 +102,10 @@ function parseChordPro(input) {
     if (!trimmed) continue;
 
     // Parse directives (allow empty values)
-    const directiveMatch = trimmed.match(/^\{(\w+):\s*(.*?)\}$/);
+    const directiveMatch = trimmed.match(/^\{(\w+):\s*(.*?)\s*\}$/);
     if (directiveMatch) {
       const [, directive, rawValue] = directiveMatch;
-      const value = rawValue.trim();
+      const value = rawValue ? rawValue.trim() : '';
       switch (directive.toLowerCase()) {
         case 'title':
         case 't':
