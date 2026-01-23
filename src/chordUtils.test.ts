@@ -16,7 +16,8 @@ import {
   keyPrefersFlats,
   getKeyRoot,
   getMajorScale,
-  getEnharmonic
+  getEnharmonic,
+  getKeyChangeInterval
 } from './chordUtils';
 import { Chord, Key } from './types';
 
@@ -463,5 +464,101 @@ describe('Round-trip conversion', () => {
       const backToLetter = numberToLetter(number!, key);
       expect(backToLetter).toBe(chord);
     }
+  });
+});
+
+describe('getKeyChangeInterval', () => {
+  it('should calculate half step up', () => {
+    const result = getKeyChangeInterval('C', 'C#');
+    expect(result.semitones).toBe(1);
+    expect(result.direction).toBe('up');
+    expect(result.display).toBe('↑½');
+  });
+
+  it('should calculate whole step up', () => {
+    const result = getKeyChangeInterval('C', 'D');
+    expect(result.semitones).toBe(2);
+    expect(result.direction).toBe('up');
+    expect(result.display).toBe('↑W');
+  });
+
+  it('should calculate minor 3rd up', () => {
+    const result = getKeyChangeInterval('C', 'Eb');
+    expect(result.semitones).toBe(3);
+    expect(result.direction).toBe('up');
+    expect(result.display).toBe('↑m3');
+  });
+
+  it('should calculate major 3rd up', () => {
+    const result = getKeyChangeInterval('C', 'E');
+    expect(result.semitones).toBe(4);
+    expect(result.direction).toBe('up');
+    expect(result.display).toBe('↑M3');
+  });
+
+  it('should calculate perfect 4th up', () => {
+    const result = getKeyChangeInterval('C', 'F');
+    expect(result.semitones).toBe(5);
+    expect(result.direction).toBe('up');
+    expect(result.display).toBe('↑P4');
+  });
+
+  it('should calculate tritone as up (equidistant)', () => {
+    const result = getKeyChangeInterval('C', 'Gb');
+    expect(result.semitones).toBe(6);
+    expect(result.direction).toBe('up');
+    expect(result.display).toBe('↑b5');
+  });
+
+  it('should calculate major 3rd down (8 semitones up = 4 down)', () => {
+    // C to Ab is 8 semitones up, which is shorter going 4 down
+    const result = getKeyChangeInterval('C', 'Ab');
+    expect(result.semitones).toBe(4);
+    expect(result.direction).toBe('down');
+    expect(result.display).toBe('↓M3');
+  });
+
+  it('should calculate half step down', () => {
+    // C to B is 11 semitones up, which is 1 semitone down
+    const result = getKeyChangeInterval('C', 'B');
+    expect(result.semitones).toBe(1);
+    expect(result.direction).toBe('down');
+    expect(result.display).toBe('↓½');
+  });
+
+  it('should calculate whole step down', () => {
+    // C to Bb is 10 semitones up, which is 2 semitones down
+    const result = getKeyChangeInterval('C', 'Bb');
+    expect(result.semitones).toBe(2);
+    expect(result.direction).toBe('down');
+    expect(result.display).toBe('↓W');
+  });
+
+  it('should handle minor keys', () => {
+    // Am to Bm is whole step up (same as A to B)
+    const result = getKeyChangeInterval('Am', 'Bm');
+    expect(result.semitones).toBe(2);
+    expect(result.direction).toBe('up');
+    expect(result.display).toBe('↑W');
+  });
+
+  it('should handle same key', () => {
+    const result = getKeyChangeInterval('C', 'C');
+    expect(result.semitones).toBe(0);
+    expect(result.display).toBe('=');
+  });
+
+  it('should handle various key combinations', () => {
+    // G to A = whole step up
+    expect(getKeyChangeInterval('G', 'A').display).toBe('↑W');
+
+    // E to F = half step up
+    expect(getKeyChangeInterval('E', 'F').display).toBe('↑½');
+
+    // D to Bb = minor 3rd down (3 semitones down)
+    expect(getKeyChangeInterval('D', 'Bb').display).toBe('↓M3');
+
+    // Eb to F = whole step up
+    expect(getKeyChangeInterval('Eb', 'F').display).toBe('↑W');
   });
 });

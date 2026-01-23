@@ -666,3 +666,66 @@ export function convertChordToLetter(chord: Chord, key: Key): Chord {
 export function isNumberChord(chord: Chord): boolean {
   return /^[#b]?[1-7]$/.test(chord.root);
 }
+
+/**
+ * Key change interval result
+ */
+export interface KeyChangeInterval {
+  /** Number of semitones (always positive, 1-6) */
+  semitones: number;
+  /** Direction of the change */
+  direction: 'up' | 'down';
+  /** Formatted display string with arrow and interval name (e.g., "↑W" or "↓m3") */
+  display: string;
+}
+
+/**
+ * Calculate the interval between two keys for display in key change boxes.
+ * Uses the shortest path (≤6 semitones up = up, >6 = down).
+ *
+ * @example
+ * getKeyChangeInterval('C', 'D')   // { semitones: 2, direction: 'up', display: '↑W' }
+ * getKeyChangeInterval('C', 'Ab')  // { semitones: 4, direction: 'down', display: '↓M3' }
+ * getKeyChangeInterval('C', 'Gb')  // { semitones: 6, direction: 'up', display: '↑b5' }
+ */
+export function getKeyChangeInterval(fromKey: Key, toKey: Key): KeyChangeInterval {
+  const fromRoot = getKeyRoot(fromKey);
+  const toRoot = getKeyRoot(toKey);
+
+  const fromIndex = getNoteIndex(fromRoot);
+  const toIndex = getNoteIndex(toRoot);
+
+  // Calculate semitone distance going up
+  const semitonesUp = ((toIndex - fromIndex) + 12) % 12;
+
+  // Determine direction: ≤6 semitones = up, >6 = down
+  let semitones: number;
+  let direction: 'up' | 'down';
+
+  if (semitonesUp === 0) {
+    // Same key (shouldn't happen but handle it)
+    return { semitones: 0, direction: 'up', display: '=' };
+  } else if (semitonesUp <= 6) {
+    semitones = semitonesUp;
+    direction = 'up';
+  } else {
+    semitones = 12 - semitonesUp;
+    direction = 'down';
+  }
+
+  // Map semitones to interval names
+  const intervalNames: Record<number, string> = {
+    1: '½',   // half step
+    2: 'W',   // whole step
+    3: 'm3',  // minor 3rd
+    4: 'M3',  // major 3rd
+    5: 'P4',  // perfect 4th
+    6: 'b5',  // tritone / diminished 5th
+  };
+
+  const arrow = direction === 'up' ? '↑' : '↓';
+  const intervalName = intervalNames[semitones] || String(semitones);
+  const display = arrow + intervalName;
+
+  return { semitones, direction, display };
+}

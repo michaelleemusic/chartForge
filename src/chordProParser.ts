@@ -303,6 +303,33 @@ export function parseChordPro(input: string, options: ParserOptions = {}): Parse
           }
           break;
 
+        case 'key_change':
+        case 'keychange': {
+          // Mid-song key change directive
+          const newKey = normalizeKey(directive.value) as Key;
+          const previousKey = key;
+
+          // Create section if none exists
+          if (!currentSection) {
+            currentSection = {
+              type: 'verse',
+              dynamics: pendingDynamics || undefined,
+              lines: []
+            };
+            pendingDynamics = null;
+          }
+
+          // Add key change line to current section
+          currentSection.lines.push({
+            chords: [],
+            keyChange: { newKey, previousKey }
+          });
+
+          // Update current key for subsequent chord interpretation
+          key = newKey;
+          break;
+        }
+
         default:
           // Unknown directive - ignore for now
           break;

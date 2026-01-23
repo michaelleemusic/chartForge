@@ -102,6 +102,13 @@ export interface Line {
   lyrics?: string;
   /** Chords positioned above the lyrics */
   chords: ChordPosition[];
+  /** Key change indicator - when present, this line displays a key change box */
+  keyChange?: {
+    /** The new key after this point */
+    newKey: Key;
+    /** The key before this change */
+    previousKey: Key;
+  };
 }
 
 /**

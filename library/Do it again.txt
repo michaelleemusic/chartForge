@@ -1,59 +1,235 @@
-{title: Do it again}
-{artist: Elevation Worship}
-{key: Bb}
+{title: Do It Again}
+{artist: Elevation Collective}
+{version: Condensed}
+{key: A}
+{tempo: 88}
+{time: 4/4}
 
-{section: Intro}
-| [4] // [1/3] // |
-2x
+{section: Intro [2x]}
+{dynamics: Piano, Acoustic Guitar, & Pads}
+[4maj13] [1add9/3]
 
 {section: Verse 1}
-[4]Walking around these walls
-[1/3]I thought by now they'd fall
-[46]But You have never failed me yet [1]
-[4]Waiting for change to come
-[1/3]Knowing the battle's won
-[46]For You have never failed me yet [1]
-
-{section: Chorus}
-[4/6]Your promise still [5/7]stands
-Great is Your faith[1]fulness
-[4]Faithfulness
-[4/6]I'm still in Your [5/7]hands
-This is my con[1]fidence
-You've [4]never failed me yet [1/3]
-
-{section: Turnaround}
-| [4] // [1/3] // [4] |
+[4maj13]Walking around these [1maj9/3]walls
+I thought by now they'd [4maj13]fall
+But You have never failed me [1add9]yet
 
 {section: Verse 2}
-[4]I know the night won't last
-[1/3]Your word will come to pass
-[46]My heart will sing Your praise a[1]gain
-[4]Jesus You're still enough
-[1/3]Keep me within Your love
-[46]My heart will sing Your praise a[1]gain
+[4maj13]Waiting for change to [1maj9/3]come
+Knowing the battle's [4maj13]won
+For You have never failed me [1add9]yet
 
-{section: Intstrumental}
-| [4] [1/3] [4] [5/7] | [1] [5/7] [1] [1/3] |
-2x
+{section: Chorus}
+{dynamics: Add Bass}
+[42/6]Your promise still [5/7]stands
+Great is Your faith[1sus4]ful[1]ness
+[5sus4/2]Faith[5/2]ful[1sus2/3]ness [1/4]
+I'm still in Your [5sus4]hands
+This is my con[1sus4]fi[1]dence
+You've never [4add9]failed me yet
+
+{section: Interlude}
+[1/3] [4] [1/3] [4]
+
+{section: Verse 3}
+{dynamics: Add Drums & Loop - Light halftime groove}
+[4maj13]I know the night won't [1maj9/3]last
+Your Word will come to [4maj13]pass
+My heart will sing Your praise a[1add9]gain
+
+{section: Verse 4}
+[4maj13]Jesus You're still e[1maj9/3]nough
+Keep me within Your [4maj13]love
+My heart will sing Your praise a[1add9]gain
+
+{section: Chorus [2x]}
+{dynamics: Four on the floor - Build Gradually}
+[4sus2/6]Your promise still [52/7]stands
+Great is Your faith[1sus4]ful[1]ness
+[5sus4/2]Faith[5/2]ful[1sus2/3]ness [4]
+I'm still in Your [5]hands
+This is my con[1sus4]fi[1]dence
+You've never [4add9]failed me yet
+
+{section: Vamp}
+{dynamics: No Drums or Bass}
+[1/3] [4maj7] [1/3] [4maj7] [1/3] [4]
+
+{section: Interlude [2x]}
+{dynamics: Full band - Four on the floor groove with 8th note pulse}
+[4] [1/3] [4] [5/7] [1]
+[5/7] [1] [1/3] [4]
 
 {section: Bridge}
-[4]I've seen You move [1/3]
-[4]You move the moun[5/7]tains
-[1]And I believe [5/7]
-[1]I'll see You do [1/3]it again
-[4]You made a way [1/3]
-[4]Where there was no [5/7]way
-[1]And I believe [5/7]
-[1]I'll see You do [1/3]it again
-|3x|
+{dynamics: Build gradually}
+[4]I've seen You move [1/3] [4]
+You move the mounta[5/7]ins [1]
+And I believe [5/7] [1]
+I'll see You do it [1/3]again [4]
+You made a way [1/3] [4]
+Where there was no [5/7]way [1]
+And I believe [5/7] [1]
+I'll see You do it [1/3]again [4]
+
+{section: Bridge}
+{dynamics: Full band hit & rest on beat 1 of bar 8 - Modulate up half step in bar 8}
+[4]I've seen You move [1/3] [4]
+You move the mounta[5/7]ins [1]
+And I believe [5/7] [1]
+I'll see You do it [1/3]again [4]
+You made a way [1/3] [4]
+Where there was no [5/7]way [1]
+And I believe [5/7] [1]
+
+{key_change: Bb}
+{section: Bridge}
+{dynamics: Bigger - Modulate up half step in bar 8}
+I'll see You do it [1/3]again [4]
+[4]I've seen You move [1/3] [4]
+You move the mounta[5/7]ins [1]
+And I believe [5/7] [1]
+I'll see You do it [1/3]again [4]
+You made a way [1/3] [4]
+Where there was no [5/7]way [1]
+And I believe [5/7] [1]
+
+{key_change: B}
+{section: Bridge}
+{dynamics: Bigger - Groove with backbeat}
+I'll see You do it [1/3]again [4]
+[4]I've seen You move [1/3] [4]
+You move the mounta[5/7]ins [1]
+And I believe [5/7] [1]
+I'll see You do it [1/3]again [4]
+You made a way [1/3] [4]
+Where there was no [5/7]way [1]
+And I believe [5/7] [1]
+I'll see You do it [1/3]again [4]
+
+{section: Bridge}
+{dynamics: Continue to build}
+[4]I've seen You move [b7dim] [6m]
+I've seen you move [5/7] [1]
+I've seen you move [5/7] [1]
+You move the mount[1/3]ains [4]
+You made a way [b7dim] [6m]
+You made a way [5/7] [1]
+And I believe [5/7] [1]
+I'll see You do it [1/3]again [4]
+
+{section: Instrumental}
+{dynamics: Let last hit sustain & fade}
+[4] [b7dim] [6m] [5/7] [1]
+[5/7] [1] [1/3] [4]
+[b7dim] [6m] [5/7] [1]
+[5/7] [1]
+
+{section: Breakdown}
+[1]
+
+{section: Chorus}
+{dynamics: Pads, Keys, Organ & Acoustic Guitar}
+[4sus2/7]Your promise still [5sus2/7]stands
+Great is Your faithful[1sus4]ness [1]
+[5sus4/2]Faith[5/2]ful[1sus2/3]ness [4maj7]
+I'm still in Your [5sus4]hands [5]
+This is my confi[1sus4]dence [1]
+You've never [2m7b5]failed me yet
+
+{section: Tag [4x]}
+{dynamics: Add Bass}
+[1/5] [5/7] [1sus2/3]
+You've never [2m7b5]failed me yet
 
 {section: Tag}
-[4] [1/3] [4] I'll see You [5/7]do it [1]a-[5/7]gain
-[1] // [1/3] [4] [5] [6m] [5/7] [1] | [5/7] // [1] // |
+{dynamics: Ritard on last vocal phrase}
+[1/5] [5/7] [1sus2/3]
+You've ne[3m/2]ver [#4dim/2]
+Failed [3dim]me yet [1]
 
-{section: Turnaround}
-You've never failed me [1/3]yet
-I [4]never will forget [1/3]
-You've [4]never failed me yet [1/3]
-I [4]never will forget [1/3] [4]
+{section: Breakdown}
+{dynamics: Full Band Full Dynamics on hits}
+[1] [1/3] [1/3] [4]
+
+{section: Bridge}
+{dynamics: Huge hits with backbeat groove}
+[4]I've seen You move [1/3] [4]
+You move the mounta[5/7]ins [1]
+And I believe [5/7] [1]
+I'll see You do it [1/3]again [4]
+You made a way [1/3] [4]
+Where there was no [5/7]way [1]
+And I believe [5/7] [1]
+I'll see You do it [1/3]again [4]
+
+{section: Bridge}
+{dynamics: Full band hit & rest on beat 1 - Big Hits into next section}
+[4]I've seen You move [b7dim] [6m]
+I've seen You move [5/7] [1]
+I've seen You move [5/7] [1]
+You move the mounta[1/3]ins [4]
+You made a way [b7dim] [6m]
+You made a [2m7b5]way [#4dim] [3dim/7] [1/5]
+And I believe [5/7] [1]
+I've seen You do it
+
+{section: Refrain}
+{dynamics: Big hits with funky groove}
+[17]I've seen You do it [1sus13] [17]
+I've seen You do it [1sus13] [17]
+I've seen You do it [1sus13] [17]
+Yes You will [1sus13]
+
+{section: Refrain}
+[17]I've seen You move [1sus13] [17]
+I've seen You move [1sus13] [17]
+I've seen You move [1sus13] [17]
+Seen You move [1sus13]
+
+{section: Refrain}
+{dynamics: Add backbeat}
+[17]And I believe [1sus13] [17]
+And I believe [1sus13] [17]
+And I believe [1sus13] [17]
+I believe [1sus13]
+
+{section: Refrain}
+[17]You've made a way [1sus13] [17]
+You've made a way [1sus13] [17]
+You've made a way [1sus13] [17]
+Made a way [1sus13]
+
+{section: Instrumental [2x]}
+{dynamics: Full band riffs between hits - Choppy uneven groove}
+[17] [1sus13] [17] [1sus13]
+[17] [1sus13] [17] [1sus13]
+
+{section: Refrain}
+{dynamics: Back to four on the floor with backbeat}
+[17]I've seen You move [1sus13] [17]
+You move the mountains [1sus13] [17]
+And I believe [1sus13] [17]
+I've seen You do it [1sus13] [17]
+You made a way [1sus13] [17]
+Where there was no [1sus13]way [17]
+And I believe [1sus13] [17]
+I've seen You do it [1sus13]
+
+{section: Refrain}
+{dynamics: Big fill before final hits}
+[17]I've seen You move [1sus13] [17]
+You move the mountains [1sus13] [17]
+And I believe [1sus13] [17]
+I've seen You do it [1sus13] [17]
+You made a way [1sus13] [17]
+Where there was no [1sus13]way [17]
+And I believe [1sus13] [17]
+I've seen You do it [1sus13]
+
+{section: Vamp}
+{dynamics: Big rumble}
+[1sus13]
+
+{section: Ending}
+{dynamics: Big final hit}
+[1sus13]

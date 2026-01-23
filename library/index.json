@@ -726,9 +726,9 @@
     "path": "Did You Feel The Mountains Tremble.txt"
   },
   {
-    "title": "Do it again",
-    "artist": "Elevation Worship",
-    "key": "Bb",
+    "title": "Do It Again",
+    "artist": "Elevation Collective",
+    "key": "A",
     "path": "Do it again.txt"
   },
   {
@@ -3358,6 +3358,12 @@
     "artist": "Hillsong United",
     "key": "A",
     "path": "The Stand.txt"
+  },
+  {
+    "title": "The Story I'll Tell / On Christ the Solid Rock",
+    "artist": "Maverick City Music, Naomi Raine",
+    "key": "Eb",
+    "path": "The Story Ill Tell.txt"
   },
   {
     "title": "The Wonderful Cross",

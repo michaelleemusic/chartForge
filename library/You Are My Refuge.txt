@@ -27,7 +27,7 @@ This is [5]all I [1]need
 [5/7]I will not [6m]fear, for You [4]never let [5]go
 You [4]never let [1]go
 
-
+{key_change: A}
 {section: Verse 2}
 Be still [1]my soul and [4/1]know that He is God
 He will [6m]fight for me when [4]I cannot go on
@@ -36,6 +36,7 @@ I will [6m]trust in You a[4]lone
 For Your [1]mercy follows [4]after
 And You [5]lead me [1]home
 
+{key_change: C}
 {section: Chorus [6x]}
 [4]You are my refuge, my [1]strength in the storm
 [5/7]All of my [6m]days I am [4]safe in Your [5]arms
@@ -43,12 +44,11 @@ And You [5]lead me [1]home
 [5/7]I will not [6m]fear, for You [4]never let [5]go
 You [4]never let [1]go
 
-
 {section: Bridge 1 [vamp]}
 And You [5]lead me [1]home
 And You [5]lead me [4m]home
 And You [2]lead me,
-And You [3M]lead me,
+And You [3]lead me,
 And You [4m/b6]lead me,
 
 {section: Bridge 2]}

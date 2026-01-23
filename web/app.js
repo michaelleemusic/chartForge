@@ -156,6 +156,28 @@ function parseChordPro(input) {
             pendingDynamics = value;
           }
           break;
+        case 'key_change':
+        case 'keychange':
+          // Mid-song key change directive - create as standalone section
+          // Save current section if it has content
+          if (currentSection && currentSection.lines.length > 0) {
+            // Section already in array, just clear reference
+            currentSection = null;
+          }
+          // Track current key for key changes (separate from song.key which stays as original)
+          const currentKeyForChange = song._currentKey || song.key;
+          // Create key_change as its own section
+          const keyChangeSection = {
+            type: 'key_change',
+            newKey: value.trim(),
+            previousKey: currentKeyForChange,
+            lines: []
+          };
+          song.sections.push(keyChangeSection);
+          // Track current key internally but don't change song.key (original key)
+          song._currentKey = value.trim();
+          currentSection = null;
+          break;
       }
       continue;
     }
@@ -359,6 +381,12 @@ class ChartRenderer {
 
   calculateSectionHeight(section) {
     const displayMode = this.config.displayMode || 'full';
+
+    // Key change sections have fixed height
+    if (section.type === 'key_change') {
+      return 32; // Fixed height for key change box
+    }
+
     // Compact padding for chords-only mode
     const boxPadding = displayMode === 'chords'
       ? { top: 4, bottom: 6 }
@@ -618,16 +646,23 @@ class ChartRenderer {
       const radius = config.roadmapBadgeRadius;
       const centerY = y + radius;
 
-      // Draw circle (outline for roadmap)
+      // Chorus gets filled circle, others get outline
+      const isChorus = entry.sectionType === 'chorus' || entry.sectionType === 'halfchorus';
+
       ctx.beginPath();
       ctx.arc(x + radius, centerY, radius, 0, Math.PI * 2);
-      ctx.strokeStyle = config.colors.roadmapInactive;
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
+      if (isChorus) {
+        ctx.fillStyle = config.colors.roadmapInactive;
+        ctx.fill();
+      } else {
+        ctx.strokeStyle = config.colors.roadmapInactive;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      }
 
       // Draw abbreviation
       ctx.font = `${config.fonts.roadmapBadge.weight} ${config.fonts.roadmapBadge.size}px ${config.fonts.roadmapBadge.family}`;
-      ctx.fillStyle = config.colors.roadmapInactive;
+      ctx.fillStyle = isChorus ? '#ffffff' : config.colors.roadmapInactive;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(entry.abbreviation, x + radius, centerY);
@@ -643,26 +678,24 @@ class ChartRenderer {
         if (entry.hasVamp) superText += 'v';
 
         // Position: top-right, overlapping circle edge
-        const superX = x + radius + radius * 0.5;
-        const superY = y + radius * 0.5;
+        const superCenterX = x + radius + radius * 0.7;
+        const superCenterY = y + radius * 0.3;
 
-        // Measure text for background
+        // Measure text for background circle
         const textMetrics = ctx.measureText(superText);
-        const padding = 2;
-        const bgX = superX - padding;
-        const bgY = superY - superSize - padding;
-        const bgWidth = textMetrics.width + padding * 2;
-        const bgHeight = superSize + padding * 2;
+        const circleRadius = Math.max(textMetrics.width, superSize) / 2 + 2;
 
-        // Draw background to erase circle line
+        // Draw white circle background
+        ctx.beginPath();
+        ctx.arc(superCenterX, superCenterY, circleRadius, 0, Math.PI * 2);
         ctx.fillStyle = config.colors.background;
-        ctx.fillRect(bgX, bgY, bgWidth, bgHeight);
+        ctx.fill();
 
-        // Draw superscript text
+        // Draw superscript text centered in circle
         ctx.fillStyle = config.colors.text;
-        ctx.textAlign = 'left';
-        ctx.textBaseline = 'bottom';
-        ctx.fillText(superText, superX, superY);
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(superText, superCenterX, superCenterY);
       }
 
       x += radius * 2 + 10;
@@ -674,30 +707,54 @@ class ChartRenderer {
   generateRoadmap() {
     const entries = [];
     let currentAbbr = '';
+    let currentType = '';
     let currentCount = 0;
     let currentExplicitRepeat = null;
     let currentHasVamp = false;
 
     for (const section of this.song.sections) {
-      let abbr = SECTION_ABBREVIATIONS[section.type] || '';
-      if (section.number) abbr += section.number;
-      if (section.type === 'custom' && section.label) {
-        abbr = section.label.substring(0, 2).toUpperCase();
+      let abbr;
+
+      // Key change sections get arrow based on direction
+      if (section.type === 'key_change') {
+        const interval = this.formatKeyChangeInterval(section.previousKey, section.newKey);
+        abbr = interval.startsWith('↑') ? '↑' : '↓';
+      } else {
+        abbr = SECTION_ABBREVIATIONS[section.type] || '';
+        if (section.number) abbr += section.number;
+        if (section.type === 'custom' && section.label) {
+          abbr = section.label.substring(0, 2).toUpperCase();
+        }
       }
 
       // If section has explicit repeat count or vamp, use that
       const explicitRepeat = section.repeatCount || null;
       const hasVamp = section.hasVamp || false;
 
-      if (abbr === currentAbbr && !explicitRepeat && !currentExplicitRepeat && !hasVamp && !currentHasVamp) {
+      // Key change sections never combine with previous entries
+      if (section.type === 'key_change') {
+        // Flush current entry
+        if (currentAbbr) {
+          const repeatCount = currentExplicitRepeat || (currentCount > 1 ? currentCount : null);
+          entries.push({ abbreviation: currentAbbr, repeatCount, hasVamp: currentHasVamp, sectionType: currentType });
+        }
+        // Add key change entry (never combines)
+        entries.push({ abbreviation: abbr, repeatCount: null, hasVamp: false, isKeyChange: true, sectionType: 'key_change' });
+        currentAbbr = '';
+        currentType = '';
+        currentCount = 0;
+        currentExplicitRepeat = null;
+        currentHasVamp = false;
+      } else if (abbr === currentAbbr && !explicitRepeat && !currentExplicitRepeat && !hasVamp && !currentHasVamp) {
         // Consecutive same section without explicit repeats or vamp
         currentCount++;
       } else {
         if (currentAbbr) {
           const repeatCount = currentExplicitRepeat || (currentCount > 1 ? currentCount : null);
-          entries.push({ abbreviation: currentAbbr, repeatCount, hasVamp: currentHasVamp });
+          entries.push({ abbreviation: currentAbbr, repeatCount, hasVamp: currentHasVamp, sectionType: currentType });
         }
         currentAbbr = abbr;
+        currentType = section.type;
         currentCount = 1;
         currentExplicitRepeat = explicitRepeat;
         currentHasVamp = hasVamp;
@@ -706,7 +763,7 @@ class ChartRenderer {
 
     if (currentAbbr) {
       const repeatCount = currentExplicitRepeat || (currentCount > 1 ? currentCount : null);
-      entries.push({ abbreviation: currentAbbr, repeatCount, hasVamp: currentHasVamp });
+      entries.push({ abbreviation: currentAbbr, repeatCount, hasVamp: currentHasVamp, sectionType: currentType });
     }
 
     return entries;
@@ -714,6 +771,12 @@ class ChartRenderer {
 
   renderSection(ctx, section, x, y, width) {
     const config = this.config;
+
+    // Handle key_change sections specially
+    if (section.type === 'key_change') {
+      return this.renderKeyChangeSection(ctx, section, x, y, width);
+    }
+
     const boxPadding = { top: 8, right: 8, bottom: 10, left: 8 };
     const cornerRadius = 8;
 
@@ -722,13 +785,24 @@ class ChartRenderer {
     const badgeRadius = config.badgeRadius;
     const badgeOffset = cornerRadius + 8; // Left margin: after top-left corner + padding
 
+    // Chorus gets dark fill with white text, others get white fill with black text
+    const isChorus = section.type === 'chorus' || section.type === 'halfchorus';
+
     ctx.beginPath();
     ctx.arc(x + badgeOffset + badgeRadius, y + badgeRadius, badgeRadius, 0, Math.PI * 2);
-    ctx.fillStyle = config.colors.badgeFill;
-    ctx.fill();
+    if (isChorus) {
+      ctx.fillStyle = config.colors.badgeFill;
+      ctx.fill();
+    } else {
+      ctx.fillStyle = '#ffffff';
+      ctx.fill();
+      ctx.strokeStyle = config.colors.badgeFill;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
 
     ctx.font = `${config.fonts.roadmapBadge.weight} ${config.fonts.roadmapBadge.size}px ${config.fonts.roadmapBadge.family}`;
-    ctx.fillStyle = config.colors.badgeText;
+    ctx.fillStyle = isChorus ? config.colors.badgeText : config.colors.badgeFill;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(abbr, x + badgeOffset + badgeRadius, y + badgeRadius);
@@ -995,6 +1069,205 @@ class ChartRenderer {
     return width;
   }
 
+  /**
+   * Calculate the interval between two keys with full interval names.
+   * Returns formatted string like "↑ Whole Step" or "↓ Minor 3rd".
+   */
+  getKeyChangeIntervalFull(fromKey, toKey) {
+    // Get root notes (strip 'm' suffix for minor keys)
+    const fromRoot = fromKey.replace(/m$/, '');
+    const toRoot = toKey.replace(/m$/, '');
+
+    const fromIndex = getNoteIndex(fromRoot);
+    const toIndex = getNoteIndex(toRoot);
+
+    if (fromIndex === -1 || toIndex === -1) return '?';
+
+    // Calculate semitone distance going up
+    const semitonesUp = ((toIndex - fromIndex) + 12) % 12;
+
+    if (semitonesUp === 0) return 'Same Key';
+
+    // Determine direction: ≤6 semitones = up, >6 = down
+    let semitones, direction;
+    if (semitonesUp <= 6) {
+      semitones = semitonesUp;
+      direction = 'up';
+    } else {
+      semitones = 12 - semitonesUp;
+      direction = 'down';
+    }
+
+    // Map semitones to full interval names
+    const intervalNames = {
+      1: 'Half Step',
+      2: 'Whole Step',
+      3: 'Minor 3rd',
+      4: 'Major 3rd',
+      5: 'Perfect 4th',
+      6: 'Tritone',
+    };
+
+    const arrow = direction === 'up' ? '↑' : '↓';
+    const intervalName = intervalNames[semitones] || semitones + ' semitones';
+    return arrow + ' ' + intervalName;
+  }
+
+  /**
+   * Calculate the interval between two keys for key change display.
+   * Returns formatted string like "↑W" (up whole step) or "↓m3" (down minor 3rd).
+   */
+  formatKeyChangeInterval(fromKey, toKey) {
+    // Get root notes (strip 'm' suffix for minor keys)
+    const fromRoot = fromKey.replace(/m$/, '');
+    const toRoot = toKey.replace(/m$/, '');
+
+    const fromIndex = getNoteIndex(fromRoot);
+    const toIndex = getNoteIndex(toRoot);
+
+    if (fromIndex === -1 || toIndex === -1) return '?';
+
+    // Calculate semitone distance going up
+    const semitonesUp = ((toIndex - fromIndex) + 12) % 12;
+
+    if (semitonesUp === 0) return '=';
+
+    // Determine direction: ≤6 semitones = up, >6 = down
+    let semitones, direction;
+    if (semitonesUp <= 6) {
+      semitones = semitonesUp;
+      direction = 'up';
+    } else {
+      semitones = 12 - semitonesUp;
+      direction = 'down';
+    }
+
+    // Map semitones to interval names
+    const intervalNames = {
+      1: '½',   // half step
+      2: 'W',   // whole step
+      3: 'm3',  // minor 3rd
+      4: 'M3',  // major 3rd
+      5: 'P4',  // perfect 4th
+      6: 'b5',  // tritone
+    };
+
+    const arrow = direction === 'up' ? '↑' : '↓';
+    const intervalName = intervalNames[semitones] || String(semitones);
+    return arrow + intervalName;
+  }
+
+  /**
+   * Render a key change as a standalone section with full-width shaded box.
+   */
+  renderKeyChangeSection(ctx, section, x, y, width) {
+    const config = this.config;
+    const boxHeight = 28;
+    const boxPadding = 12;
+    const cornerRadius = 6;
+
+    // Determine display text based on mode
+    let displayText;
+    if (config.numbersMode) {
+      // Numbers mode: show interval with full names
+      const intervalInfo = this.getKeyChangeIntervalFull(section.previousKey, section.newKey);
+      displayText = 'Key Change: ' + intervalInfo;
+    } else {
+      // Letter mode: show "Key Change: C → D"
+      const fromKey = this.formatAccidentals(section.previousKey);
+      const toKey = this.formatAccidentals(section.newKey);
+      displayText = 'Key Change: ' + fromKey + ' → ' + toKey;
+    }
+
+    // Draw full-width rounded rectangle with fill
+    const boxX = x;
+    const boxY = y;
+
+    ctx.beginPath();
+    ctx.moveTo(boxX + cornerRadius, boxY);
+    ctx.lineTo(boxX + width - cornerRadius, boxY);
+    ctx.quadraticCurveTo(boxX + width, boxY, boxX + width, boxY + cornerRadius);
+    ctx.lineTo(boxX + width, boxY + boxHeight - cornerRadius);
+    ctx.quadraticCurveTo(boxX + width, boxY + boxHeight, boxX + width - cornerRadius, boxY + boxHeight);
+    ctx.lineTo(boxX + cornerRadius, boxY + boxHeight);
+    ctx.quadraticCurveTo(boxX, boxY + boxHeight, boxX, boxY + boxHeight - cornerRadius);
+    ctx.lineTo(boxX, boxY + cornerRadius);
+    ctx.quadraticCurveTo(boxX, boxY, boxX + cornerRadius, boxY);
+    ctx.closePath();
+
+    // Light fill with border
+    ctx.fillStyle = '#f5f5f5';
+    ctx.fill();
+    ctx.strokeStyle = config.colors.rule;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // Draw text centered in box
+    ctx.font = `bold ${config.fonts.sectionName.size}px ${config.fonts.sectionName.family}`;
+    ctx.fillStyle = config.colors.text;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(displayText, boxX + width / 2, boxY + boxHeight / 2);
+
+    return boxHeight;
+  }
+
+  /**
+   * Render a key change box (inline within section - legacy, kept for compatibility).
+   * - In letter mode: "New Key: G"
+   * - In numbers mode: interval like "↑W" or "↓m3"
+   */
+  renderKeyChange(ctx, line, x, y, width) {
+    const config = this.config;
+    const boxHeight = 24;
+    const boxPadding = 8;
+    const cornerRadius = 4;
+
+    // Determine display text based on mode
+    let displayText;
+    if (config.numbersMode) {
+      // Numbers mode: show interval
+      displayText = this.formatKeyChangeInterval(line.previousKey, line.newKey);
+    } else {
+      // Letter mode: show "New Key: X" with unicode accidentals
+      const displayKey = this.formatAccidentals(line.newKey);
+      displayText = 'New Key: ' + displayKey;
+    }
+
+    // Measure text width
+    ctx.font = `bold ${config.fonts.sectionName.size}px ${config.fonts.sectionName.family}`;
+    const textWidth = ctx.measureText(displayText).width;
+    const boxWidth = textWidth + boxPadding * 2;
+
+    // Draw rounded rectangle border
+    const boxX = x;
+    const boxY = y;
+
+    ctx.beginPath();
+    ctx.moveTo(boxX + cornerRadius, boxY);
+    ctx.lineTo(boxX + boxWidth - cornerRadius, boxY);
+    ctx.quadraticCurveTo(boxX + boxWidth, boxY, boxX + boxWidth, boxY + cornerRadius);
+    ctx.lineTo(boxX + boxWidth, boxY + boxHeight - cornerRadius);
+    ctx.quadraticCurveTo(boxX + boxWidth, boxY + boxHeight, boxX + boxWidth - cornerRadius, boxY + boxHeight);
+    ctx.lineTo(boxX + cornerRadius, boxY + boxHeight);
+    ctx.quadraticCurveTo(boxX, boxY + boxHeight, boxX, boxY + boxHeight - cornerRadius);
+    ctx.lineTo(boxX, boxY + cornerRadius);
+    ctx.quadraticCurveTo(boxX, boxY, boxX + cornerRadius, boxY);
+    ctx.closePath();
+
+    ctx.strokeStyle = config.colors.rule;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // Draw text centered in box
+    ctx.fillStyle = config.colors.text;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(displayText, boxX + boxWidth / 2, boxY + boxHeight / 2);
+
+    return boxHeight;
+  }
+
   renderChordRow(ctx, chords, x, y, width) {
     if (chords.length === 0) return;
     if (chords.length === 1) {
@@ -1085,6 +1358,12 @@ class ChartRenderer {
   }
 
   getSectionAbbreviation(section) {
+    // Key change sections use arrow based on direction
+    if (section.type === 'key_change') {
+      const interval = this.formatKeyChangeInterval(section.previousKey, section.newKey);
+      return interval.startsWith('↑') ? '↑' : '↓';
+    }
+
     let abbr = SECTION_ABBREVIATIONS[section.type] || '';
     if (section.number) abbr += section.number;
     if (section.type === 'custom' && section.label) {
@@ -1094,6 +1373,15 @@ class ChartRenderer {
   }
 
   getSectionDisplayName(section) {
+    // Key change sections show the key or interval
+    if (section.type === 'key_change') {
+      if (this.config.numbersMode) {
+        return this.formatKeyChangeInterval(section.previousKey, section.newKey);
+      } else {
+        return this.formatAccidentals(section.newKey);
+      }
+    }
+
     let name;
     if (section.label) {
       name = section.label.toUpperCase();
@@ -1136,7 +1424,7 @@ function highlightSyntax(text) {
 
   // Highlight directives: {key: value}
   html = html.replace(
-    /(\{)(title|artist|key|tempo|time|version)(:)([^}]*)(\})/gi,
+    /(\{)(title|artist|key|tempo|time|version|key_change|keychange)(:)([^}]*)(\})/gi,
     '<span class="hl-brace">$1</span><span class="hl-directive-key">$2</span><span class="hl-brace">$3</span><span class="hl-directive-value">$4</span><span class="hl-brace">$5</span>'
   );
 
@@ -1335,6 +1623,7 @@ function extractVersion(content) {
 async function createNewSong() {
   const template = `{title: New Song}
 {artist: Artist Name}
+{version: }
 {key: C}
 {tempo: 120}
 {time: 4/4}
@@ -1927,23 +2216,65 @@ render = function() {
   }
 };
 
-function convertSongToLetters(song, key) {
+function convertSongToLetters(song, targetKey) {
+  // Calculate transposition amount from original key to target key
+  const originalKeyRoot = song.key.replace(/m$/, '');
+  const targetKeyRoot = targetKey.replace(/m$/, '');
+  const originalIndex = getNoteIndex(originalKeyRoot);
+  const targetIndex = getNoteIndex(targetKeyRoot);
+  const transposeSemitones = ((targetIndex - originalIndex) + 12) % 12;
+
+  // Track current key through the song (for key changes)
+  let currentKey = targetKey;
+
   return {
     ...song,
-    sections: song.sections.map(section => ({
-      ...section,
-      lines: section.lines.map(line => {
-        // Skip dynamics lines (no chords to convert)
-        if (line.type === 'dynamics') return line;
+    sections: song.sections.map(section => {
+      // Handle key_change sections - transpose the keys
+      if (section.type === 'key_change') {
+        // Calculate the new key by transposing the original new key
+        const newKeyRoot = section.newKey.replace(/m$/, '');
+        const isMinor = section.newKey.endsWith('m');
+        const newKeyIndex = getNoteIndex(newKeyRoot);
+        const transposedIndex = (newKeyIndex + transposeSemitones) % 12;
+        const transposedKeyRoot = getNoteAtIndex(transposedIndex, FLAT_KEYS.has(targetKey));
+        const transposedNewKey = transposedKeyRoot + (isMinor ? 'm' : '');
+
+        // Similarly transpose the previous key
+        const prevKeyRoot = section.previousKey.replace(/m$/, '');
+        const prevIsMinor = section.previousKey.endsWith('m');
+        const prevKeyIndex = getNoteIndex(prevKeyRoot);
+        const transposedPrevIndex = (prevKeyIndex + transposeSemitones) % 12;
+        const transposedPrevKeyRoot = getNoteAtIndex(transposedPrevIndex, FLAT_KEYS.has(targetKey));
+        const transposedPrevKey = transposedPrevKeyRoot + (prevIsMinor ? 'm' : '');
+
+        // Update current key for subsequent sections
+        currentKey = transposedNewKey;
+
         return {
-          ...line,
-          chords: (line.chords || []).map(cp => ({
-            ...cp,
-            chord: convertChordToLetter(cp.chord, key)
-          }))
+          ...section,
+          newKey: transposedNewKey,
+          previousKey: transposedPrevKey
         };
-      })
-    }))
+      }
+
+      // Regular section - convert chords
+      return {
+        ...section,
+        lines: section.lines.map(line => {
+          // Skip dynamics lines (no chords to convert)
+          if (line.type === 'dynamics') return line;
+
+          return {
+            ...line,
+            chords: (line.chords || []).map(cp => ({
+              ...cp,
+              chord: convertChordToLetter(cp.chord, currentKey)
+            }))
+          };
+        })
+      };
+    })
   };
 }
 
