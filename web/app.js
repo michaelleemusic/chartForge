@@ -101,10 +101,11 @@ function parseChordPro(input) {
     const trimmed = line.trim();
     if (!trimmed) continue;
 
-    // Parse directives
-    const directiveMatch = trimmed.match(/^\{(\w+):\s*(.+?)\}$/);
+    // Parse directives (allow empty values)
+    const directiveMatch = trimmed.match(/^\{(\w+):\s*(.*?)\}$/);
     if (directiveMatch) {
-      const [, directive, value] = directiveMatch;
+      const [, directive, rawValue] = directiveMatch;
+      const value = rawValue.trim();
       switch (directive.toLowerCase()) {
         case 'title':
         case 't':
@@ -576,7 +577,7 @@ class ChartRenderer {
       ctx.fillStyle = config.colors.text;
       ctx.textAlign = 'left';
       ctx.textBaseline = 'top';
-      const displayTitle = this.song.version
+      const displayTitle = this.song.version && this.song.version.trim()
         ? `${this.song.title} (${this.song.version})`
         : this.song.title;
       ctx.fillText(displayTitle, config.margins.left, y);
@@ -632,7 +633,7 @@ class ChartRenderer {
       ctx.fillStyle = config.colors.text;
       ctx.textAlign = 'left';
       ctx.textBaseline = 'top';
-      const compactTitle = this.song.version
+      const compactTitle = this.song.version && this.song.version.trim()
         ? `${this.song.title} (${this.song.version})`
         : this.song.title;
       ctx.fillText(compactTitle, config.margins.left, y);
