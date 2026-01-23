@@ -44,16 +44,16 @@ const DEFAULT_CONFIG = {
   margins: { top: 40, right: 40, bottom: 60, left: 40 },
   columnGap: 30,
   fonts: {
-    title: { family: 'Lato, -apple-system, BlinkMacSystemFont, sans-serif', size: 28, weight: 'bold', lineHeight: 1.2 },
-    artist: { family: 'Lato, -apple-system, BlinkMacSystemFont, sans-serif', size: 14, weight: 'normal', lineHeight: 1.4 },
-    metadata: { family: 'Lato, -apple-system, BlinkMacSystemFont, sans-serif', size: 12, weight: 'normal', lineHeight: 1.4 },
-    sectionName: { family: 'Lato, -apple-system, BlinkMacSystemFont, sans-serif', size: 13, weight: 'bold', lineHeight: 1.4 },
-    chordRoot: { family: 'Lato, -apple-system, BlinkMacSystemFont, sans-serif', size: 14, weight: 'bold', lineHeight: 1.3 },
-    chordQuality: { family: 'Lato, -apple-system, BlinkMacSystemFont, sans-serif', size: 10, weight: 'normal', lineHeight: 1.3 },
-    lyrics: { family: 'Lato, -apple-system, BlinkMacSystemFont, sans-serif', size: 13, weight: 'normal', lineHeight: 1.4 },
-    dynamics: { family: 'Lato, -apple-system, BlinkMacSystemFont, sans-serif', size: 11, weight: '300', lineHeight: 1.4 },
-    roadmapBadge: { family: 'Lato, -apple-system, BlinkMacSystemFont, sans-serif', size: 10, weight: 'normal', lineHeight: 1 },
-    pageNumber: { family: 'Lato, -apple-system, BlinkMacSystemFont, sans-serif', size: 12, weight: 'normal', lineHeight: 1.4 }
+    title: { family: 'Roboto, -apple-system, BlinkMacSystemFont, sans-serif', size: 28, weight: 'bold', lineHeight: 1.2 },
+    artist: { family: 'Roboto, -apple-system, BlinkMacSystemFont, sans-serif', size: 14, weight: 'normal', lineHeight: 1.4 },
+    metadata: { family: 'Roboto, -apple-system, BlinkMacSystemFont, sans-serif', size: 12, weight: 'normal', lineHeight: 1.4 },
+    sectionName: { family: 'Roboto, -apple-system, BlinkMacSystemFont, sans-serif', size: 13, weight: 'bold', lineHeight: 1.4 },
+    chordRoot: { family: 'Roboto, -apple-system, BlinkMacSystemFont, sans-serif', size: 14, weight: 'bold', lineHeight: 1.3 },
+    chordQuality: { family: 'Roboto, -apple-system, BlinkMacSystemFont, sans-serif', size: 10, weight: 'normal', lineHeight: 1.3 },
+    lyrics: { family: 'Roboto, -apple-system, BlinkMacSystemFont, sans-serif', size: 13, weight: 'normal', lineHeight: 1.4 },
+    dynamics: { family: 'Roboto, -apple-system, BlinkMacSystemFont, sans-serif', size: 11, weight: '300', lineHeight: 1.4 },
+    roadmapBadge: { family: 'Roboto, -apple-system, BlinkMacSystemFont, sans-serif', size: 10, weight: 'normal', lineHeight: 1 },
+    pageNumber: { family: 'Roboto, -apple-system, BlinkMacSystemFont, sans-serif', size: 12, weight: 'normal', lineHeight: 1.4 }
   },
   colors: {
     background: '#ffffff',
@@ -2209,25 +2209,6 @@ displayModeSelect.addEventListener('change', () => {
   updatePageControls();
 });
 
-// Font selection control
-const fontSelect = document.getElementById('font-select');
-
-function updateRendererFont(fontName) {
-  const fallback = fontName === 'Libre Caslon Text' ? ', Georgia, serif' : ', -apple-system, BlinkMacSystemFont, sans-serif';
-  const fontFamily = fontName + fallback;
-  for (const key in renderer.config.fonts) {
-    renderer.config.fonts[key].family = fontFamily;
-  }
-}
-
-fontSelect.addEventListener('change', () => {
-  updateRendererFont(fontSelect.value);
-  renderer.layout = renderer.calculateLayout();
-  currentPage = 0;
-  renderer.renderPage(canvas, currentPage, previewContainer);
-  updatePageControls();
-});
-
 // Override render to apply key conversion and display mode
 const originalRender = render;
 render = function() {
@@ -2236,9 +2217,8 @@ render = function() {
     const input = inputEl.value;
     let song = parseChordPro(input);
 
-    // Apply display mode and font
+    // Apply display mode
     renderer.config.displayMode = displayModeSelect.value;
-    updateRendererFont(fontSelect.value);
 
     const selectedKey = renderKeySelect.value;
 

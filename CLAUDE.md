@@ -113,6 +113,6 @@ chartForge/
 
 ## Key Fonts
 
-- **PDF Preview**: Lato (default), Roboto, Noto Sans, Libre Caslon Text
+- **PDF Preview**: Roboto
 - **Editor Pane**: Roboto
 - Loaded from Google Fonts.
