@@ -2059,6 +2059,19 @@ function getNoteAtIndex(index, preferFlats) {
   return preferFlats ? CHROMATIC_FLATS[normalizedIndex] : CHROMATIC_SHARPS[normalizedIndex];
 }
 
+// Convert sharp keys to their flat equivalents for display
+// A# → Bb, C# → Db, D# → Eb, F# → Gb, G# → Ab
+function preferFlatKey(key) {
+  const sharpToFlat = {
+    'A#': 'Bb', 'A#m': 'Bbm',
+    'C#': 'Db', 'C#m': 'Dbm',
+    'D#': 'Eb', 'D#m': 'Ebm',
+    'F#': 'Gb', 'F#m': 'Gbm',
+    'G#': 'Ab', 'G#m': 'Abm'
+  };
+  return sharpToFlat[key] || key;
+}
+
 function getMajorScale(keyRoot) {
   // Use properly spelled scales from lookup
   if (MAJOR_SCALES[keyRoot]) {
@@ -2237,16 +2250,17 @@ function convertSongToLetters(song, targetKey) {
         const isMinor = section.newKey.endsWith('m');
         const newKeyIndex = getNoteIndex(newKeyRoot);
         const transposedIndex = (newKeyIndex + transposeSemitones) % 12;
-        const transposedKeyRoot = getNoteAtIndex(transposedIndex, FLAT_KEYS.has(targetKey));
-        const transposedNewKey = transposedKeyRoot + (isMinor ? 'm' : '');
+        // Always prefer flats for key display (Bb not A#)
+        const transposedKeyRoot = getNoteAtIndex(transposedIndex, true);
+        const transposedNewKey = preferFlatKey(transposedKeyRoot + (isMinor ? 'm' : ''));
 
         // Similarly transpose the previous key
         const prevKeyRoot = section.previousKey.replace(/m$/, '');
         const prevIsMinor = section.previousKey.endsWith('m');
         const prevKeyIndex = getNoteIndex(prevKeyRoot);
         const transposedPrevIndex = (prevKeyIndex + transposeSemitones) % 12;
-        const transposedPrevKeyRoot = getNoteAtIndex(transposedPrevIndex, FLAT_KEYS.has(targetKey));
-        const transposedPrevKey = transposedPrevKeyRoot + (prevIsMinor ? 'm' : '');
+        const transposedPrevKeyRoot = getNoteAtIndex(transposedPrevIndex, true);
+        const transposedPrevKey = preferFlatKey(transposedPrevKeyRoot + (prevIsMinor ? 'm' : ''));
 
         // Update current key for subsequent sections
         currentKey = transposedNewKey;
