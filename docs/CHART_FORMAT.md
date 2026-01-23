@@ -63,6 +63,11 @@ Reference: MultiTracks.com ChartBuilder PDF output
 - Quality: same as letter mode
 - Slash: `1/3`, `6m7/5`
 
+### Band Notes
+- Performance instructions in parentheses: `[(Out)]`, `[(hold)]`, `[(last time)]`
+- Rendered in *italic* with muted color to distinguish from chords
+- Placed inline with chords in chord rows
+
 ## Fonts
 - **Lato Bold**: Song title, section names, chord roots
 - **Lato Regular**: Lyrics, metadata

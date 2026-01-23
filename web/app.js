@@ -313,19 +313,26 @@ class ChartRenderer {
     const contentWidth = this.config.page.width - this.config.margins.left - this.config.margins.right;
     const columnWidth = (contentWidth - this.config.columnGap) / 2;
 
+    // Page 1: full header + roadmap
     const headerHeight =
       this.config.fonts.title.size * this.config.fonts.title.lineHeight +
       this.config.fonts.artist.size * this.config.fonts.artist.lineHeight +
       this.config.spacing.afterHeader;
-
     const roadmapHeight = this.config.spacing.roadmapHeight + this.config.spacing.afterRoadmap;
     const contentStartY = this.config.margins.top + headerHeight + roadmapHeight;
-    const columnHeight = this.config.page.height - contentStartY - this.config.margins.bottom;
+    const columnHeightPage1 = this.config.page.height - contentStartY - this.config.margins.bottom;
+
+    // Pages 2+: compact header only (no roadmap)
+    const compactHeaderHeight = (this.config.fonts.sectionName.size + 4) * 1.4 + this.config.spacing.afterHeader;
+    const contentStartYContinuation = this.config.margins.top + compactHeaderHeight;
+    const columnHeightContinuation = this.config.page.height - contentStartYContinuation - this.config.margins.bottom;
 
     const sections = [];
     let page = 0;
     let column = 0;
     let columnY = 0;
+
+    const getColumnHeight = () => page === 0 ? columnHeightPage1 : columnHeightContinuation;
 
     const advanceColumn = () => {
       if (column === 0) {
@@ -348,7 +355,7 @@ class ChartRenderer {
       }
 
       // If section doesn't fit and we're not at top, move to next column/page
-      if (columnY > 0 && columnY + sectionHeight > columnHeight) {
+      if (columnY > 0 && columnY + sectionHeight > getColumnHeight()) {
         advanceColumn();
       }
 
@@ -363,7 +370,7 @@ class ChartRenderer {
       columnY += sectionHeight + this.config.spacing.betweenSections;
 
       // If exceeded column height, next section goes to new column
-      if (columnY >= columnHeight) {
+      if (columnY >= getColumnHeight()) {
         advanceColumn();
       }
     }
@@ -372,8 +379,10 @@ class ChartRenderer {
       pageCount: page + 1,
       sections,
       columnWidth,
-      columnHeight,
+      columnHeightPage1,
+      columnHeightContinuation,
       contentStartY,
+      contentStartYContinuation,
       column1X: this.config.margins.left,
       column2X: this.config.margins.left + columnWidth + this.config.columnGap
     };
@@ -1020,6 +1029,20 @@ class ChartRenderer {
     const config = this.config;
     let currentX = x;
 
+    // Check if this is a band note (e.g., "(Out)", "(last time hold)")
+    const isBandNote = chord.root.startsWith('(') && chord.root.endsWith(')');
+
+    if (isBandNote) {
+      // Render band notes in lighter italic style
+      ctx.font = `italic ${config.fonts.chordRoot.size}px ${config.fonts.chordRoot.family}`;
+      ctx.fillStyle = config.colors.textMuted;
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'alphabetic';
+      ctx.fillText(chord.root, currentX, y);
+      currentX += ctx.measureText(chord.root).width;
+      return currentX - x;
+    }
+
     const displayRoot = this.formatAccidentals(chord.root);
     ctx.font = `${config.fonts.chordRoot.weight} ${config.fonts.chordRoot.size}px ${config.fonts.chordRoot.family}`;
     ctx.fillStyle = config.colors.text;
@@ -1049,6 +1072,14 @@ class ChartRenderer {
   measureChordWidth(ctx, chord) {
     const config = this.config;
     let width = 0;
+
+    // Check if this is a band note
+    const isBandNote = chord.root.startsWith('(') && chord.root.endsWith(')');
+
+    if (isBandNote) {
+      ctx.font = `italic ${config.fonts.chordRoot.size}px ${config.fonts.chordRoot.family}`;
+      return ctx.measureText(chord.root).width;
+    }
 
     const displayRoot = this.formatAccidentals(chord.root);
     ctx.font = `${config.fonts.chordRoot.weight} ${config.fonts.chordRoot.size}px ${config.fonts.chordRoot.family}`;
@@ -2219,7 +2250,9 @@ render = function() {
     }
 
     renderer.loadSong(song);
-    currentPage = 0;
+    // Clamp current page to valid range (preserve page when editing)
+    const maxPage = renderer.layout.pageCount - 1;
+    if (currentPage > maxPage) currentPage = maxPage;
     renderer.renderPage(canvas, currentPage, previewContainer);
     updatePageControls();
   } catch (e) {
