@@ -1,6 +1,8 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const { execSync, spawn } = require('child_process');
+const os = require('os');
 
 const PORT = 3000;
 const ROOT = path.join(__dirname, '..');
@@ -111,6 +113,105 @@ const server = http.createServer((req, res) => {
       }
       return;
     }
+  }
+
+  // PDF Import API
+  if (url.pathname === '/api/import/pdf' && req.method === 'POST') {
+    const chunks = [];
+    req.on('data', chunk => chunks.push(chunk));
+    req.on('end', () => {
+      const buffer = Buffer.concat(chunks);
+
+      // Parse multipart form data to extract PDF file
+      const contentType = req.headers['content-type'] || '';
+      const boundaryMatch = contentType.match(/boundary=(.+)$/);
+
+      if (!boundaryMatch) {
+        res.writeHead(400);
+        res.end('Invalid content type');
+        return;
+      }
+
+      const boundary = boundaryMatch[1];
+      const parts = buffer.toString('binary').split('--' + boundary);
+
+      let pdfData = null;
+      for (const part of parts) {
+        if (part.includes('filename=') && part.includes('.pdf')) {
+          // Find the start of file content (after double CRLF)
+          const headerEnd = part.indexOf('\r\n\r\n');
+          if (headerEnd !== -1) {
+            // Extract binary data, removing trailing CRLF
+            let fileContent = part.slice(headerEnd + 4);
+            if (fileContent.endsWith('\r\n')) {
+              fileContent = fileContent.slice(0, -2);
+            }
+            pdfData = Buffer.from(fileContent, 'binary');
+          }
+        }
+      }
+
+      if (!pdfData) {
+        res.writeHead(400);
+        res.end('No PDF file found in request');
+        return;
+      }
+
+      // Save PDF to temp file
+      const tempDir = os.tmpdir();
+      const tempPdf = path.join(tempDir, `chartforge_import_${Date.now()}.pdf`);
+
+      try {
+        fs.writeFileSync(tempPdf, pdfData);
+
+        // Run Python converter script - try multiple Python paths
+        const scriptPath = path.join(ROOT, 'scripts', 'convert_pdf.py');
+        const pythonPaths = [
+          '/Applications/Xcode.app/Contents/Developer/usr/bin/python3',
+          '/opt/homebrew/bin/python3',
+          '/usr/local/bin/python3',
+          'python3'
+        ];
+
+        let result = null;
+        let lastError = null;
+
+        for (const pythonPath of pythonPaths) {
+          try {
+            result = execSync(`"${pythonPath}" "${scriptPath}" "${tempPdf}"`, {
+              encoding: 'utf-8',
+              maxBuffer: 10 * 1024 * 1024 // 10MB
+            });
+            break; // Success, exit loop
+          } catch (e) {
+            lastError = e;
+            continue; // Try next Python path
+          }
+        }
+
+        if (!result) {
+          throw lastError || new Error('No working Python found');
+        }
+
+        // Clean up temp file
+        fs.unlinkSync(tempPdf);
+
+        res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
+        res.end(result);
+        console.log('PDF imported successfully');
+
+      } catch (e) {
+        // Clean up temp file on error
+        if (fs.existsSync(tempPdf)) {
+          fs.unlinkSync(tempPdf);
+        }
+
+        console.error('PDF import error:', e.message);
+        res.writeHead(500);
+        res.end('PDF conversion failed: ' + e.message);
+      }
+    });
+    return;
   }
 
   // Static file serving

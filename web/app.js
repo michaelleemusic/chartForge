@@ -2249,6 +2249,87 @@ function getMajorScale(keyRoot) {
   return MAJOR_SCALE_INTERVALS.map(interval => getNoteAtIndex(rootIndex + interval, preferFlats));
 }
 
+function letterToNumber(chordStr, key) {
+  // Parse the chord: root, quality, optional bass
+  const match = chordStr.match(/^([A-G][#b]?)(.*?)(?:\/([A-G][#b]?))?$/);
+  if (!match) return chordStr;
+
+  const [, root, quality, bass] = match;
+  const scale = getMajorScale(key);
+  if (!scale) return chordStr;
+
+  // Find scale degree for root
+  const rootIndex = getNoteIndex(root);
+  if (rootIndex === -1) return chordStr;
+
+  // Find which scale degree this is
+  let scaleDegree = null;
+  let chromaticPrefix = '';
+
+  for (let i = 0; i < 7; i++) {
+    const scaleNoteIndex = getNoteIndex(scale[i]);
+    if (scaleNoteIndex === rootIndex) {
+      scaleDegree = i + 1;
+      break;
+    }
+  }
+
+  // If not in scale, check for chromatic alterations
+  if (scaleDegree === null) {
+    const keyIndex = getNoteIndex(key);
+    const semitoneFromRoot = ((rootIndex - keyIndex) + 12) % 12;
+
+    // Map semitones to scale degrees with alterations
+    const preferFlats = FLAT_KEYS.has(key);
+    const semitoneMap = preferFlats
+      ? { 0: '1', 1: 'b2', 2: '2', 3: 'b3', 4: '3', 5: '4', 6: 'b5', 7: '5', 8: 'b6', 9: '6', 10: 'b7', 11: '7' }
+      : { 0: '1', 1: '#1', 2: '2', 3: '#2', 4: '3', 5: '4', 6: '#4', 7: '5', 8: '#5', 9: '6', 10: '#6', 11: '7' };
+
+    const degreeStr = semitoneMap[semitoneFromRoot] || '1';
+    let result = degreeStr + quality;
+
+    if (bass) {
+      const bassNum = letterToNumberSingle(bass, key, scale);
+      result += '/' + bassNum;
+    }
+
+    return result;
+  }
+
+  // Build the number chord
+  let result = chromaticPrefix + scaleDegree + quality;
+
+  // Handle bass note
+  if (bass) {
+    const bassNum = letterToNumberSingle(bass, key, scale);
+    result += '/' + bassNum;
+  }
+
+  return result;
+}
+
+function letterToNumberSingle(note, key, scale) {
+  const noteIndex = getNoteIndex(note);
+
+  for (let i = 0; i < 7; i++) {
+    const scaleNoteIndex = getNoteIndex(scale[i]);
+    if (scaleNoteIndex === noteIndex) {
+      return String(i + 1);
+    }
+  }
+
+  // Not in scale - return with chromatic alteration
+  const keyIndex = getNoteIndex(key);
+  const semitoneFromRoot = ((noteIndex - keyIndex) + 12) % 12;
+
+  const preferFlats = FLAT_KEYS.has(key);
+  const semitoneMap = preferFlats
+    ? { 0: '1', 1: 'b2', 2: '2', 3: 'b3', 4: '3', 5: '4', 6: 'b5', 7: '5', 8: 'b6', 9: '6', 10: 'b7', 11: '7' }
+    : { 0: '1', 1: '#1', 2: '2', 3: '#2', 4: '3', 5: '4', 6: '#4', 7: '5', 8: '#5', 9: '6', 10: '#6', 11: '7' };
+
+  return semitoneMap[semitoneFromRoot] || '1';
+}
+
 function numberToLetter(chordStr, key) {
   // Handle chromatic prefix (b7, #4, etc.)
   const chromaticMatch = chordStr.match(/^([#b])([1-7])(.*)$/);
@@ -2445,3 +2526,87 @@ function convertSongToLetters(song, targetKey) {
 
 loadSong('You Are My Refuge.txt');
 updateButtonStates();
+
+// ============================================================================
+// PDF Import
+// ============================================================================
+
+const importPdfBtn = document.getElementById('import-pdf-btn');
+const pdfFileInput = document.getElementById('pdf-file-input');
+
+importPdfBtn.addEventListener('click', () => {
+  pdfFileInput.click();
+});
+
+pdfFileInput.addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append('pdf', file);
+
+  importPdfBtn.textContent = 'Importing...';
+  importPdfBtn.disabled = true;
+
+  try {
+    const response = await fetch('/api/import/pdf', {
+      method: 'POST',
+      body: formData
+    });
+
+    if (response.ok) {
+      const chordpro = await response.text();
+      inputEl.value = chordpro;
+      currentSongPath = null;
+      syncHighlight();
+      render();
+      updateButtonStates();
+    } else {
+      const error = await response.text();
+      alert('Import failed: ' + error);
+    }
+  } catch (e) {
+    alert('Import failed: ' + e.message);
+    console.error('PDF import error:', e);
+  } finally {
+    importPdfBtn.textContent = 'Import PDF';
+    importPdfBtn.disabled = false;
+    pdfFileInput.value = ''; // Reset file input
+  }
+});
+
+// ============================================================================
+// Convert to Numbers
+// ============================================================================
+
+const convertNumbersBtn = document.getElementById('convert-numbers-btn');
+
+convertNumbersBtn.addEventListener('click', () => {
+  const input = inputEl.value;
+
+  // Extract key from content
+  const keyMatch = input.match(/\{key:\s*([A-G][#b]?m?)\}/i);
+  if (!keyMatch) {
+    alert('Please specify a key first: {key: C}');
+    return;
+  }
+
+  const key = keyMatch[1];
+
+  // Convert all [Chord] occurrences to number notation
+  const converted = input.replace(/\[([^\]]+)\]/g, (match, chord) => {
+    // Skip if already a number chord
+    if (/^[#b]?[1-7]/.test(chord)) {
+      return match;
+    }
+
+    const numberChord = letterToNumber(chord, key);
+    return '[' + numberChord + ']';
+  });
+
+  inputEl.value = converted;
+  currentSongPath = null;
+  syncHighlight();
+  render();
+  updateButtonStates();
+});

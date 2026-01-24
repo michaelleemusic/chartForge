@@ -132,6 +132,38 @@ if (strpos($uri, '/api/library/') === 0) {
     textResponse('Method not allowed', 405);
 }
 
+// PDF Import API
+if ($uri === '/api/import/pdf' && $method === 'POST') {
+    if (!isset($_FILES['pdf']) || $_FILES['pdf']['error'] !== UPLOAD_ERR_OK) {
+        textResponse('No PDF file uploaded or upload error', 400);
+    }
+
+    $tmpFile = $_FILES['pdf']['tmp_name'];
+    $scriptPath = $ROOT . '/scripts/convert_pdf.py';
+
+    // Check if Python and script exist
+    if (!file_exists($scriptPath)) {
+        textResponse('PDF converter script not found', 500);
+    }
+
+    // Run Python converter script
+    $cmd = 'python3 ' . escapeshellarg($scriptPath) . ' ' . escapeshellarg($tmpFile) . ' 2>&1';
+    $output = shell_exec($cmd);
+
+    if ($output === null) {
+        textResponse('PDF conversion failed - could not execute script', 500);
+    }
+
+    // Check for error output
+    if (strpos($output, 'Error:') === 0 || strpos($output, 'Traceback') !== false) {
+        textResponse('PDF conversion failed: ' . $output, 500);
+    }
+
+    header('Content-Type: text/plain; charset=utf-8');
+    echo $output;
+    exit;
+}
+
 // Static file serving
 if ($uri === '/' || $uri === '') {
     $uri = '/web/index.html';
