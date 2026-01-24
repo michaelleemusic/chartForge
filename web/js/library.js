@@ -28,7 +28,7 @@ export async function loadSong(path) {
 }
 
 export async function saveSong(path, content) {
-  const response = await fetch(`/api/library/${encodeURIComponent(path)}`, {
+  const response = await fetch(`api/library/${encodeURIComponent(path)}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'text/plain' },
     body: content
@@ -42,7 +42,7 @@ export async function saveSong(path, content) {
 }
 
 export async function createSong(filename, content) {
-  const response = await fetch(`/api/library/${encodeURIComponent(filename)}`, {
+  const response = await fetch(`api/library/${encodeURIComponent(filename)}`, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain' },
     body: content
@@ -56,7 +56,7 @@ export async function createSong(filename, content) {
 }
 
 export async function deleteSong(path) {
-  const response = await fetch(`/api/library/${encodeURIComponent(path)}`, {
+  const response = await fetch(`api/library/${encodeURIComponent(path)}`, {
     method: 'DELETE'
   });
 

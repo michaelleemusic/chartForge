@@ -152,6 +152,29 @@ body {
   cursor: not-allowed;
 }
 
+.toolbar-btn.loading {
+  position: relative;
+  overflow: hidden;
+  opacity: 0.8;
+  cursor: wait;
+}
+
+.toolbar-btn.loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 120, 212, 0.3), transparent);
+  animation: btn-progress-sweep 1.5s ease-in-out infinite;
+}
+
+@keyframes btn-progress-sweep {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
 .toolbar-divider {
   width: 1px;
   height: 24px;
@@ -270,6 +293,7 @@ body {
   gap: 12px;
   padding: 12px 16px;
   background: #3a3a3a;
+  flex-wrap: wrap;
 }
 
 .page-controls {
@@ -423,5 +447,66 @@ body {
   .preview-panel {
     min-width: unset;
     height: 50%;
+  }
+
+  .preview-header {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 12px;
+  }
+
+  .page-controls {
+    order: 1;
+  }
+
+  .preview-header select {
+    font-size: 12px;
+    padding: 5px 24px 5px 8px;
+  }
+
+  .download-btn {
+    font-size: 12px;
+    padding: 5px 10px;
+  }
+}
+
+@media (max-width: 600px) {
+  .preview-header {
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 10px;
+  }
+
+  .page-controls {
+    width: 100%;
+    justify-content: center;
+    order: -1;
+  }
+
+  .page-controls button {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+
+  .page-controls span {
+    font-size: 12px;
+  }
+
+  .preview-header select {
+    flex: 1;
+    min-width: 0;
+    font-size: 11px;
+    padding: 5px 22px 5px 6px;
+  }
+
+  .download-btn {
+    font-size: 11px;
+    padding: 5px 8px;
+    gap: 4px;
+  }
+
+  .download-btn svg {
+    width: 14px;
+    height: 14px;
   }
 }

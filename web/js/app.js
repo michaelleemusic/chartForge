@@ -418,9 +418,10 @@ async function handlePdfImport(e) {
   const importPdfBtn = document.getElementById('import-pdf-btn');
   importPdfBtn.textContent = 'Importing...';
   importPdfBtn.disabled = true;
+  importPdfBtn.classList.add('loading');
 
   try {
-    const response = await fetch('/api/import/pdf', {
+    const response = await fetch('api/import/pdf', {
       method: 'POST',
       body: formData
     });
@@ -442,6 +443,7 @@ async function handlePdfImport(e) {
   } finally {
     importPdfBtn.textContent = 'Import PDF';
     importPdfBtn.disabled = false;
+    importPdfBtn.classList.remove('loading');
     document.getElementById('pdf-file-input').value = ''; // Reset file input
   }
 }
