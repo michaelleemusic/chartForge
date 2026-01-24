@@ -11,6 +11,7 @@ Requires: pdfplumber>=0.10.0
 
 import re
 import sys
+import time
 from pathlib import Path
 
 try:
@@ -301,6 +302,40 @@ def parse_column(words, col_start_x, page=None):
     if current_section and current_section['lines']:
         sections.append(current_section)
 
+    # Post-process: merge chord-only lines with following lyric-only lines
+    for section in sections:
+        merged_lines = []
+        i = 0
+        while i < len(section['lines']):
+            line = section['lines'][i]
+            # Skip dynamics lines
+            if line.get('type') == 'dynamics':
+                merged_lines.append(line)
+                i += 1
+                continue
+
+            chords = line.get('chords', [])
+            lyrics = line.get('lyrics', [])
+
+            # If chord-only line, check if next line is lyric-only
+            if chords and not lyrics and i + 1 < len(section['lines']):
+                next_line = section['lines'][i + 1]
+                if next_line.get('type') != 'dynamics':
+                    next_chords = next_line.get('chords', [])
+                    next_lyrics = next_line.get('lyrics', [])
+                    # Merge if next line has lyrics (with or without chords)
+                    if next_lyrics:
+                        merged_lines.append({
+                            'chords': chords + next_chords,
+                            'lyrics': next_lyrics
+                        })
+                        i += 2
+                        continue
+
+            merged_lines.append(line)
+            i += 1
+        section['lines'] = merged_lines
+
     return sections
 
 
@@ -313,7 +348,23 @@ def parse_page(page, page_num, title=''):
 
     page_width = page.width
     mid_x = page_width / 2
-    min_y = 95 if page_num == 0 else 45
+
+    # For page 1, dynamically detect roadmap area
+    if page_num == 0:
+        # Find roadmap badges: small bold text (~9-11pt) in header area
+        roadmap_bottom = 70  # Default minimum
+        for w in words:
+            if w['top'] > 150:  # Don't look too far down
+                break
+            fontname = w.get('fontname', '')
+            size = w.get('size', 0)
+            is_bold = 'Bold' in fontname
+            # Roadmap badges are bold, ~9-11pt
+            if is_bold and 9.0 <= size <= 11.5 and w['top'] > 50:
+                roadmap_bottom = max(roadmap_bottom, w['bottom'] + 10)
+        min_y = max(roadmap_bottom, 70)
+    else:
+        min_y = 45
 
     # Filter words
     filtered = []
@@ -332,9 +383,6 @@ def parse_page(page, page_num, title=''):
             continue
         # Skip title appearing again in header
         if text == title and w['top'] < 60:
-            continue
-        # Skip roadmap badges at top of page 1
-        if page_num == 0 and w['top'] < 100:
             continue
         filtered.append(w)
 
@@ -425,6 +473,9 @@ def convert_pdf(pdf_path):
 
         all_sections = []
         for page_num, page in enumerate(pdf.pages):
+            # Rate limiting: small delay between pages to spread CPU load
+            if page_num > 0:
+                time.sleep(0.1)
             all_sections.extend(parse_page(page, page_num, title))
 
     # Build output

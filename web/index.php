@@ -19,6 +19,14 @@ if (!is_dir($TRASH_DIR)) {
 $method = $_SERVER['REQUEST_METHOD'];
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
+// Normalize URI: extract the API/resource path from the full URI
+// Handles both /api/... and /chartforge/api/... patterns
+if (preg_match('#(/api/.*)$#', $uri, $matches)) {
+    $uri = $matches[1];
+} elseif (preg_match('#(/library/.*)$#', $uri, $matches)) {
+    $uri = $matches[1];
+}
+
 // MIME types for static files
 $mimeTypes = [
     'html' => 'text/html',
@@ -92,6 +100,13 @@ function rebuildIndex($libraryDir) {
 }
 
 // API Routes
+
+// Rebuild index endpoint
+if ($uri === '/api/rebuild-index' && $method === 'POST') {
+    $count = rebuildIndex($LIBRARY_DIR);
+    jsonResponse(['status' => 'ok', 'indexed' => $count]);
+}
+
 if (strpos($uri, '/api/library/') === 0) {
     $filename = urldecode(substr($uri, strlen('/api/library/')));
     $filepath = $LIBRARY_DIR . '/' . $filename;
@@ -146,9 +161,21 @@ if ($uri === '/api/import/pdf' && $method === 'POST') {
         textResponse('PDF converter script not found', 500);
     }
 
-    // Run Python converter script
-    $cmd = 'python3 ' . escapeshellarg($scriptPath) . ' ' . escapeshellarg($tmpFile) . ' 2>&1';
+    // Rate limiting: Only allow one concurrent PDF conversion
+    $lockFile = '/tmp/chartforge_pdf_convert.lock';
+    $lock = fopen($lockFile, 'w');
+    if (!$lock || !flock($lock, LOCK_EX | LOCK_NB)) {
+        if ($lock) fclose($lock);
+        textResponse('Another PDF conversion is in progress. Please wait a moment and try again.', 429);
+    }
+
+    // Run Python converter script with nice (lowest CPU priority)
+    $cmd = 'nice -n 19 python3 ' . escapeshellarg($scriptPath) . ' ' . escapeshellarg($tmpFile) . ' 2>&1';
     $output = shell_exec($cmd);
+
+    // Release lock
+    flock($lock, LOCK_UN);
+    fclose($lock);
 
     if ($output === null) {
         textResponse('PDF conversion failed - could not execute script', 500);

@@ -167,14 +167,28 @@ const server = http.createServer((req, res) => {
         return;
       }
 
-      // Save PDF to temp file
+      // Rate limiting: Only allow one concurrent PDF conversion
       const tempDir = os.tmpdir();
+      const lockFile = path.join(tempDir, 'chartforge_pdf_convert.lock');
+      let lockFd;
+      try {
+        lockFd = fs.openSync(lockFile, 'wx');
+      } catch (e) {
+        if (e.code === 'EEXIST') {
+          res.writeHead(429);
+          res.end('Another PDF conversion is in progress. Please wait a moment and try again.');
+          return;
+        }
+        throw e;
+      }
+
+      // Save PDF to temp file
       const tempPdf = path.join(tempDir, `chartforge_import_${Date.now()}.pdf`);
 
       try {
         fs.writeFileSync(tempPdf, pdfData);
 
-        // Run Python converter script - try multiple Python paths
+        // Run Python converter script with nice (lowest CPU priority)
         const scriptPath = path.join(ROOT, 'scripts', 'convert_pdf.py');
         const pythonPaths = [
           '/Applications/Xcode.app/Contents/Developer/usr/bin/python3',
@@ -188,7 +202,7 @@ const server = http.createServer((req, res) => {
 
         for (const pythonPath of pythonPaths) {
           try {
-            result = execSync(`"${pythonPath}" "${scriptPath}" "${tempPdf}"`, {
+            result = execSync(`nice -n 19 "${pythonPath}" "${scriptPath}" "${tempPdf}"`, {
               encoding: 'utf-8',
               maxBuffer: 10 * 1024 * 1024 // 10MB
             });
@@ -206,6 +220,10 @@ const server = http.createServer((req, res) => {
         // Clean up temp file
         fs.unlinkSync(tempPdf);
 
+        // Release lock
+        fs.closeSync(lockFd);
+        fs.unlinkSync(lockFile);
+
         res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
         res.end(result);
         console.log('PDF imported successfully');
@@ -215,6 +233,11 @@ const server = http.createServer((req, res) => {
         if (fs.existsSync(tempPdf)) {
           fs.unlinkSync(tempPdf);
         }
+        // Release lock on error
+        try {
+          fs.closeSync(lockFd);
+          fs.unlinkSync(lockFile);
+        } catch {}
 
         console.error('PDF import error:', e.message);
         res.writeHead(500);
