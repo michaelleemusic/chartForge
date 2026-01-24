@@ -1,0 +1,202 @@
+{title: Agnus Dei / King of Kings}
+{key: D}
+{tempo: 68}
+{time: 4/4}
+
+{section: Verse 1}
+{dynamics: Pad & Vocal only}
+[D] [Dsus4]
+Alleluia Alleluia
+[D]
+For the Lord God Almighty reigns
+
+{section: Verse 1}
+[D] [Dsus4] [Dmaj7sus4]
+Alleluia Alleluia
+[D]
+For the Lord God Almighty reigns
+
+{section: Pre Chorus}
+[D] [G/D]
+Allelui a
+
+{section: Chorus 1}
+[Dsus4] [D]
+Ho - ly holy
+[Em/D] [D] [Bm7] [A]
+Are you Lord God Almigh ty
+[G]
+Worthy is the Lamb
+Worthy is the Lamb
+
+{section: Chorus 2}
+[D]
+You are holy holy
+[Em/D] [D] [Bm7] [A]
+Are you Lord God Almigh ty
+[G]
+Worthy is the Lamb
+
+{section: Vamp}
+{dynamics: 1 bar Vamp - Swell into Intro}
+[Em7] [D]
+A - men
+
+{section: Intro}
+{dynamics: "King of Kings" Intro - Piano & Pad}
+[D]
+
+{section: Verse 2}
+[D/F] [G]
+In the darkness we were waiting
+[A] [D]
+Without hope without light
+[D/F] [G]
+'Til from Heaven You came running
+[A] [D]
+There was mercy in Your eyes
+[D/F] [G]
+To fulfill the law and prophets
+[A] [D]
+To a virgin came the Word
+[D/F] [G]
+From a throne of endless glory
+[A]
+To a cradle in the dirt
+
+{section: Vamp}
+{dynamics: Piano line}
+[D]
+
+{section: Chorus 3}
+[D] [G]
+Praise the Father praise the Son
+[Bm7] [A]
+Praise the Spirit three in one
+[D] [G]
+God of glory Majesty
+[Bm7] [G] [A]
+Praise forever to the King of Kings
+
+{section: Turnaround}
+{dynamics: Intro feel - Bigger}
+[D]
+
+{section: Verse 3}
+[D/F] [G]
+To reveal the Kingdom coming
+[A] [D]
+And to reconcile the lost
+[D/F] [G]
+To redeem the whole creation
+[A] [D]
+You did not despise the Cross
+[D/F] [G]
+For even in Your suffering
+[A] [D]
+You saw to the other side
+[D/F] [G]
+Knowing this was our salvation
+[A]
+Jesus for our sake You died
+
+{section: Vamp}
+{dynamics: Piano line}
+[D]
+
+{section: Chorus 3}
+{dynamics: Bigger - Tom groove}
+[D] [G]
+Praise the Father praise the Son
+[Bm7] [Asus4] [A]
+Praise the Spirit three in one
+[D] [G]
+God of glory Majesty
+[Bm7] [G] [A]
+Praise forever to the King of Kings
+
+{section: Vamp}
+{dynamics: Piano line - Bigger}
+[D]
+
+{section: Verse 4}
+{dynamics: Breakdown - Band in, slowly building at bar 5}
+[Bm] [G]
+And the morning that You rose
+[A] [D]
+All of Heaven held its breath
+[Bm] [G]
+Till that stone was moved for good
+[A] [D]
+For the Lamb had conquered death
+[Bm] [G]
+And the dead rose from their tombs
+[A] [D]
+And the angels stood in awe
+[Bm] [G]
+For the souls of all who'd come
+
+{section: Verse 5}
+{dynamics: All in with big Tom groove}
+[D/F] [G]
+And the Church of Christ was born
+[A] [D]
+Then the Spirit lit the flame
+[D/F] [G]
+Now this gospel truth of old
+[A] [D]
+Shall not kneel shall not faint
+[D/F] [G]
+By His blood and in His Name
+[A] [D]
+In His freedom I am free
+[D/F] [G]
+For the love of Jesus Christ
+[A]
+Who has resurrected me
+
+{section: Vamp}
+{dynamics: Piano line - Build to Chorus}
+[D]
+
+{section: Chorus 3}
+{dynamics: Full groove, huge energy}
+[D] [G]
+Praise the Father praise the Son
+[Bm7] [Asus4] [A]
+Praise the Spirit three in one
+[D] [G]
+God of glory Majesty
+[Bm7] [G] [A] [D]
+Praise forever to the King of Kings
+
+{section: Chorus 3}
+[D] [G]
+Praise the Father praise the Son
+[Bm7] [Asus4] [A]
+Praise the Spirit three in one
+[D] [G]
+God of glory Majesty
+[Bm7] [G] [A] [D]
+Praise forever to the King of Kings
+
+{section: Tag}
+[Bm7] [G] [A]
+Praise forever to the King of Kings
+
+{section: Vamp}
+{dynamics: Breakdown - 1 bar Vamp - Loose tempo}
+[D]
+
+{section: Tag}
+{dynamics: Softly}
+[Bm7] [Gsus2] [Asus4]
+Praise forever to the King of Kings
+{dynamics: 3}
+
+{section: Outro}
+{dynamics: Piano line}
+[D]
+
+{section: Ending}
+[D]

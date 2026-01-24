@@ -1,0 +1,186 @@
+{title: My Testimony}
+{key: B}
+{tempo: 97}
+{time: 4/4}
+
+{section: Vamp}
+{dynamics: 2 bar Vamp}
+[B5]
+
+{section: Intro}
+{dynamics: Four on the floor groove - Acoustic Guitar in}
+[B] [Bsus4] [B] [Bsus4]
+
+{section: Verse 1}
+[B] [E]
+I saw Satan fall like lightning
+[B] [E]
+I saw darkness run for cover
+[G#m]
+But the miracle
+[E]
+That I just can't get over
+[G#m]
+My name
+[F#] [E]
+Is registered in heaven
+
+{section: Verse 2}
+{dynamics: A little bigger - Tom groove}
+[B] [E]
+I believe in signs and wonders
+[B] [E]
+I have resurrection power
+[G#m]
+Still the miracle
+[E]
+That I just can't get over
+[G#m]
+My name
+[F#] [E]
+Is registered in heaven
+[G#m]
+Yeah my praise
+
+{section: Chorus}
+{dynamics: A little bigger - Breakdown in last bar}
+[B] [G#m]
+This is my testimony
+[E]
+From death to life
+[B] [G#m]
+'Cause grace rewrote my story
+[E]
+I'll testify
+[B] [G#m]
+By Jesus Christ the righteous
+[E]
+I'm justified
+[B] [G#m]
+This is my testimony
+[E]
+This is my testimony
+
+{section: Interlude}
+{dynamics: All in, full Groove}
+[B] [G#m] [E] [B] [G#m] [E]
+
+{section: Verse 3}
+{dynamics: Dynamics down}
+[B]
+Come together
+[Bsus4]
+Sons and daughters
+[B]
+Bought with blood
+[Bsus4]
+And washed in water
+
+{section: Tag}
+[G#m] [F#]
+Yes our God will finish
+[E]
+What He started
+
+{section: Chorus}
+{dynamics: All in}
+[B] [G#m]
+This is my testimony
+[E]
+From death to life
+[B] [G#m]
+'Cause grace rewrote my story
+[E]
+I'll testify
+[B] [G#m]
+By Jesus Christ the righteous
+[E]
+I'm justified
+[B] [G#m]
+This is my testimony
+[E]
+This is my testimony
+
+{section: Interlude}
+[B] [G#m] [E] [B] [G#m] [E]
+
+{section: Vamp}
+{dynamics: 2 bar Vamp}
+[B] [Bsus4]
+
+{section: Bridge}
+[B] [E/B]
+If I'm not dead You're not done
+[B] [E/B]
+Greater things are still to come
+Oh I believe
+[B] [E]
+If I'm not dead You're not done
+[B/D] [E]
+Greater things are still to come
+Oh I believe
+
+{section: Bridge}
+{dynamics: Full groove}
+[B] [E]
+If I'm not dead You're not done
+[B] [E]
+Greater things are still to come
+Oh I believe
+[B] [E]
+If I'm not dead You're not done
+[B] [E]
+Greater things are still to come
+Oh I believe
+
+{section: Vamp}
+{dynamics: 2 bar Vamp}
+[B] [E]
+
+{section: Chorus}
+{dynamics: Breakdown - Groove in at bar 5, build to repeat}
+[B] [G#m]
+This is my testimony
+[E]
+From death to life
+[B] [G#m]
+'Cause grace rewrote my story
+[E]
+I'll testify
+[B] [G#m]
+By Jesus Christ the righteous
+[E]
+I'm justified
+[F#] [G#m]
+This is my testimony
+[E]
+Oh I'm alive
+
+{section: Chorus}
+{dynamics: All in}
+[B] [G#m]
+This is my testimony
+[E]
+From death to life
+[B] [C#m]
+'Cause grace rewrote my story
+[G#m]
+I'll testify
+[B] [G#m]
+By Jesus Christ the righteous
+[E]
+I'm justified
+[B] [G#m]
+This is my testimony
+[E]
+This is my testimony
+
+{section: Outro}
+{dynamics: All in}
+[B] [G#m] [E] [B] [G#m] [E]
+
+{section: Outro}
+[B] [G#m] [E] [B] [G#m] [E]
+
+{section: Ending}
+[B]

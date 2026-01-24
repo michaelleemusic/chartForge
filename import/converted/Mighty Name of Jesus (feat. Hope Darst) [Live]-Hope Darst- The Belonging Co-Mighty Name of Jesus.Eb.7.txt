@@ -1,0 +1,273 @@
+{title: Mighty Name of Jesus (feat. Hope Darst) [Live]}
+{key: Eb}
+{tempo: 72}
+{time: 4/4}
+
+{section: Intro}
+{dynamics: Soft dynamics, hits}
+[A#] [Cm7] [B#add4]
+[E#/G] [B#add4] [A#]
+
+{section: Verse 1}
+{dynamics: Dropdown}
+[A#]
+I pray into the atmosphere
+[B#]
+Spirit of God You’re here
+[E#/G] [B#] [A#]
+You have all authori ty
+[A#]
+I pray over my heart and mind
+[B#]
+I am healed by Your stripes
+[Cm7] [E#/G]
+Your blood declares that I
+[A#]
+am free
+
+{section: Chorus 1}
+{dynamics: Drums & Bass in}
+[A#2]
+In the mighty name of Jesus
+[Cm7] [B#add4]
+I pray
+[E#/G]
+Calling on the power of heaven
+[B#add4] [A#2]
+I pro - claim
+[A#2]
+Every weapon formed against me
+[Cm7] [B#add4]
+Must break
+In the mighty name
+
+{section: Verse 2}
+{dynamics: Medium groove/dynamics}
+[A#]
+I draw a permanent boundary line
+[B#]
+The enemy has no rights
+[E#/G] [B#] [A#]
+To come near my fami ly
+[A#]
+No scheme
+Could ever undo God's plans
+[B#]
+No matter the circumstance
+[Cm7] [E#/G] [A#]
+The cross has sealed my destin y
+
+{section: Chorus 1}
+{dynamics: Pick it up}
+[A#2]
+In the mighty name of Jesus
+[Cm7] [B#add4]
+I pray
+[E#/G]
+Calling on the power of heaven
+[B#add4] [A#2]
+I pro - claim
+[A#2]
+Every weapon formed against me
+[Cm7] [B#add4]
+Must break
+In the mighty name
+
+{section: Chorus 2}
+[A#2]
+In the mighty name of Jesus
+[Cm7] [B#add4]
+I know
+[E#/G]
+All the power of fear and darkness
+[B#add4] [A#2]
+Must go
+[A#/C]
+'Cause every key to every victory
+[E#] [B#/D]
+I hold
+In the mighty name
+[E#/G] [B#add4] [A#2]
+Of J - e - sus
+
+{section: Bridge}
+{dynamics: Dropdown, Snare roll groove}
+[A#2]
+I will not fear I will not fear
+[B#add4]
+When the enemy comes near
+[E#2/G]
+On the doorframe of my life
+[A#2]
+Is the blood of Jesus Christ
+[A#2]
+I will not fear I will not fear
+[B#add4]
+There’s an army of angels here
+[E#2/G]
+I’m protected on all sides
+
+{section: Bridge}
+{dynamics: Slowly build}
+[A#2]
+I will not fear I will not fear
+[B#add4]
+When the enemy comes near
+[E#2/G]
+On the doorframe of my life
+[A#2]
+Is the blood of Jesus Christ
+[A#2]
+I will not fear I will not fear
+[B#add4]
+There’s an army of angels here
+[E#2/G]
+I’m protected on all sides
+[A#2]
+By the blood of Jesus Christ
+
+{section: Vamp}
+{dynamics: 1 bar build}
+[Fm7]
+
+{section: Chorus 1}
+{dynamics: Bar 1: Breakdown, hits on "I pray"}
+[A#2]
+In the mighty name of Jesus
+[Cm7] [B#add4]
+I pray
+[E#/G]
+Calling on the power of heaven
+[B#add4] [A#2]
+I pro - claim
+[A#2]
+Every weapon formed against me
+[Cm7] [B#add4]
+Must break
+
+{section: Chorus 2}
+[A#2]
+In the mighty name of Jesus
+[Cm7] [B#add4]
+I know
+[E#/G]
+All the power of fear and darkness
+[B#add4] [A#2]
+Must go
+[A#/C]
+'Cause every key to every victory
+[E#] [B#/D]
+I hold
+In the mighty name
+[E#/G] [B#add4] [A#2]
+Of J - e - sus
+
+{section: Refrain}
+{dynamics: Last chord: breakdown}
+It's in the mighty of Name
+[A#2] [Cm7] [B#add4]
+Of J - e - sus
+It's in the mighty of Name
+[E#/G] [B#add4] [A#2]
+Of J - e - sus
+
+{section: Interlude}
+{dynamics: Softly}
+[A#2] [Cm7] [B#add4]
+
+{section: Interlude}
+{dynamics: Light groove}
+[A#2] [Cm7] [B#add4]
+[E#/G] [B#add4] [A#2]
+
+{section: Interlude}
+{dynamics: A little more}
+[A#2] [Cm7] [B#add4]
+[E#/G] [B#add4] [A#2]
+
+{section: Bridge}
+{dynamics: Breakdown}
+[A#2]
+I will not fear I will not fear
+[B#add4]
+When the enemy comes near
+[E#2/G]
+On the doorframe of my life
+[A#2]
+Is the blood of Jesus Christ
+[A#2]
+I will not fear I will not fear
+[B#add4]
+There’s an army of angels here
+[E#2/G]
+I’m protected on all sides
+[A#2]
+By the blood of Jesus Christ
+
+{section: Bridge}
+{dynamics: Soft Tom groove - 2nd half: pick it up}
+[A#2]
+I will not fear I will not fear
+[B#add4]
+When the enemy comes near
+
+{section: Bridge}
+{dynamics: Busier - 2nd half: build}
+[A#2]
+I will not fear I will not fear
+[B#add4]
+When the enemy comes near
+[E#2/G]
+On the doorframe of my life
+[A#2]
+Is the blood of Jesus Christ
+[A#2]
+I will not fear I will not fear
+[B#add4]
+There’s an army of angels here
+[E#2/G]
+I’m protected on all sides
+[A#2]
+By the blood of Jesus Christ
+
+{section: Vamp}
+{dynamics: 1 bar build}
+[Fm7]
+
+{section: Chorus 1}
+{dynamics: Full groove}
+[A#2]
+In the mighty name of Jesus
+[Cm7] [B#add4]
+I pray
+[E#/G]
+Calling on the power of heaven
+[B#add4] [A#2]
+I pro - claim
+[A#2]
+Every weapon formed against me
+[Cm7] [B#add4]
+Must break
+In the mighty name
+[E#/G] [B#add4] [A#2]
+Of J - e - sus
+
+{section: Chorus 2}
+[A#2]
+In the mighty name of Jesus
+[Cm7] [B#add4]
+I know
+[E#/G]
+All the power of fear and darkness
+[B#add4] [A#2]
+Must go
+[A#/C]
+'Cause every key to every victory
+[E#] [B#/D]
+I hold
+In the mighty name
+[E#/G] [B#add4] [A#2]
+Of J - e - sus
+
+{section: Refrain}
+It's in the mighty of Name

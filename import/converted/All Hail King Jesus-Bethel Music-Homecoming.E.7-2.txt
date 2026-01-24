@@ -1,0 +1,161 @@
+{title: All Hail King Jesus}
+{key: E}
+{tempo: 74}
+{time: 4/4}
+
+{section: Intro}
+{dynamics: Ambient Pad & FX}
+[Esus2]
+
+{section: Verse 1}
+{dynamics: Piano in}
+[E]
+There was a moment
+When the lights went out
+[C#m]
+When death had claimed its victory
+[B]
+The King of love
+Had given up His life
+[A]
+The darkest day in history
+
+{section: Verse 2}
+{dynamics: Piano in}
+[E]
+There on a cross
+They made for sinners
+[C#m]
+For every curse
+His blood atoned
+[B]
+One final breath
+And it was finished
+[A]
+But not the end
+We could have known
+
+{section: Pre Chorus}
+{dynamics: Bigger, more layers}
+[F#m] [C#m] [B]
+For the Earth began to shake
+[E] [E/G] [A]
+And the veil was torn
+[F#m] [C#m] [B]
+What sacri fice was made
+[E] [E/G] [A]
+As the hea vens roared
+
+{section: Chorus}
+{dynamics: Bigger - Tom hits}
+[E] [Esus4]
+All hail King Jesus
+[E] [Esus4]
+All hail the Lord
+[E/G] [C#m7]
+Of Heaven and Earth
+[A2]
+All hail King Jesus
+[E/G] [B]
+All hail the Savior
+Of the world
+
+{section: Turnaround}
+[E] [A/E] [E] [A/E]
+
+{section: Verse 3}
+{dynamics: Full Band - Closed Hi-Hat groove}
+[E]
+There was a moment
+When the sky lit up
+[C#m]
+A flash of light breaking through
+
+{section: Pre Chorus}
+{dynamics: Build on last chord}
+[F#m] [C#m] [B]
+For in a dark cold tomb
+[E] [E/G] [A]
+Where our Lord was laid
+[F#m] [C#m] [B]
+One miracu- lous breath
+[E] [E/G] [A]
+And we’re fore- ver changed
+
+{section: Chorus}
+{dynamics: Bigger dynamics - Tom hits}
+[E] [Esus4]
+All hail King Jesus
+[E] [Esus4]
+All hail the Lord
+[E/G] [C#m7]
+Of Heaven and Earth
+[A2]
+All hail King Jesus
+[E/G] [Bsus4]
+All hail the Savior
+[B]
+Of the world
+
+{section: Chorus}
+{dynamics: Gradual build}
+[C#m7] [A2]
+All hail King Jesus
+
+{section: Instrumental}
+{dynamics: Big driving energy}
+[B] [C#m] [A] [Esus4] [E/G]
+[B] [C#m] [A] [Esus4] [E/G]
+
+{section: Bridge}
+{dynamics: Continue building}
+[B] [C#m] [A]
+Let every knee come bow
+[Esus4] [E/G]
+Before the King of Kings
+[B] [C#m]
+Let every tongue
+[A] [Esus4] [E/G]
+Confess that He is Lor - d
+[B] [C#m]
+Lift up your shout
+[A] [Esus4] [E]
+Let us join with all of Heaven
+
+{section: Refrain}
+{dynamics: Full groove, huge energy}
+[B] [C#m] [A] [Esus4] [E/G]
+Singing h- o - ly-
+
+{section: Refrain}
+[B] [C#m] [A] [Esus4] [E/G]
+Singing h- o - ly-
+
+{section: Refrain}
+[B] [C#m] [A] [Esus4] [E/G]
+Cry out h- o - ly-
+
+{section: Refrain}
+[B] [C#m]
+Singing h- oly
+
+{section: Vamp}
+{dynamics: 2 bar Vamp, breakdown}
+[A]
+
+{section: Chorus}
+{dynamics: Softly}
+[E] [Esus4]
+All hail King Jesus
+[E] [A/E]
+All hail the Lord
+[E/G] [C#m7]
+Of Heaven and Earth
+[A2]
+All hail King Jesus
+[E/G] [Bsus4]
+All hail the Savior
+Of the world
+
+{section: Ending}
+[E]
