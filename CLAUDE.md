@@ -7,16 +7,26 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 chartForge - Chart builder web-app for worship-style music.
 
 **Primary Repository**: git@github.com:michaelleemusic/chartForge.git
-**Auth Method**: SSH keys (all dev machines have SSH key access to GitHub and production server)
+**Auth Method**: SSH keys
 
-### SSH Keys
-Before git push or rsync to production, ensure keys are loaded:
+### SSH Keys by Machine
+
+**Desktop (mlee-desktop):**
+- Key: `~/.ssh/id_ed25519` (works for both GitHub and DreamHost)
+- Auto-loaded by macOS keychain
+
+**Laptop (mlee-laptop):**
+- Key: `~/.ssh/id_ed25519` (UPDATE PATH IF DIFFERENT)
+- Auto-loaded by macOS keychain
+
+**Troubleshooting:**
 ```bash
-ssh-add ~/.ssh/dreamhost_proflee  # For production deployment
+ssh-add -l                                                # List loaded keys
+ssh -T git@github.com                                     # Test GitHub
+ssh proflee_me@pdx1-shared-a1-17.dreamhost.com "echo ok"  # Test DreamHost
 ```
 
 ## Commands
-
 - `npm run build` - Compile TypeScript to dist/
 - `npm test` - Run Jest tests
 - `npm run test:watch` - Run tests in watch mode
