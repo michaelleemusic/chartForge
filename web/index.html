@@ -28,7 +28,14 @@
         <!-- Public: Upload/Download .txt files -->
         <button class="toolbar-btn" id="upload-btn">Upload</button>
         <input type="file" id="txt-file-input" accept=".txt" hidden>
-        <button class="toolbar-btn" id="download-txt-btn">Download</button>
+        <button class="download-btn" id="download-txt-btn" title="Download TXT">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          txt
+        </button>
         <!-- Auth required: Library management -->
         <button class="toolbar-btn auth-required" id="new-btn">New</button>
         <button class="toolbar-btn auth-required" id="update-btn">Update</button>
