@@ -108,7 +108,7 @@
     <button id="submit">Continue</button>
     <p id="error" class="error hidden"></p>
     <div class="public-link">
-      <a href="/">Continue with public domain songs only</a>
+      <a href="./">Continue with public domain songs only</a>
     </div>
   </div>
   <script>
@@ -129,7 +129,7 @@
       errorEl.classList.add('hidden');
 
       try {
-        const res = await fetch('/api/auth', {
+        const res = await fetch('api/auth', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({email})
@@ -137,7 +137,7 @@
         const data = await res.json();
 
         if (data.success) {
-          window.location.href = '/';
+          window.location.href = './';
         } else {
           errorEl.textContent = 'Email not authorized for full library access';
           errorEl.classList.remove('hidden');

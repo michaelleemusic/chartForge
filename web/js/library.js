@@ -11,7 +11,7 @@ export function getLibraryIndex() {
 export async function loadLibraryIndex() {
   try {
     // Fetch from API endpoint (returns filtered index based on auth state)
-    const response = await fetch('/api/library');
+    const response = await fetch('api/library');
     libraryIndex = await response.json();
     return libraryIndex;
   } catch (e) {
@@ -21,7 +21,7 @@ export async function loadLibraryIndex() {
 }
 
 export async function loadSong(path) {
-  const response = await fetch(`/library/${path}`);
+  const response = await fetch(`library/${path}`);
   if (!response.ok) {
     throw new Error(`Failed to load song: ${response.statusText}`);
   }
@@ -29,7 +29,7 @@ export async function loadSong(path) {
 }
 
 export async function saveSong(path, content) {
-  const response = await fetch(`/api/library/${encodeURIComponent(path)}`, {
+  const response = await fetch(`api/library/${encodeURIComponent(path)}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'text/plain' },
     body: content
@@ -43,7 +43,7 @@ export async function saveSong(path, content) {
 }
 
 export async function createSong(filename, content) {
-  const response = await fetch(`/api/library/${encodeURIComponent(filename)}`, {
+  const response = await fetch(`api/library/${encodeURIComponent(filename)}`, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain' },
     body: content
@@ -57,7 +57,7 @@ export async function createSong(filename, content) {
 }
 
 export async function deleteSong(path) {
-  const response = await fetch(`/api/library/${encodeURIComponent(path)}`, {
+  const response = await fetch(`api/library/${encodeURIComponent(path)}`, {
     method: 'DELETE'
   });
 

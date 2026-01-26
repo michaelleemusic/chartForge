@@ -482,7 +482,7 @@ async function handlePdfImport(e) {
   importPdfBtn.classList.add('loading');
 
   try {
-    const response = await fetch('/api/import/pdf', {
+    const response = await fetch('api/import/pdf', {
       method: 'POST',
       body: formData
     });

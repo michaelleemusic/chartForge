@@ -2,7 +2,7 @@
 
 export async function checkAuthStatus() {
   try {
-    const res = await fetch('/api/auth/status');
+    const res = await fetch('api/auth/status');
     const data = await res.json();
     return data.authenticated;
   } catch (e) {
