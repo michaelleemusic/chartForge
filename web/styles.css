@@ -152,6 +152,12 @@ body {
   cursor: not-allowed;
 }
 
+/* Hide auth-required elements for public users */
+.auth-required.hidden {
+  display: none !important;
+}
+
+
 .toolbar-btn.loading {
   position: relative;
   overflow: hidden;

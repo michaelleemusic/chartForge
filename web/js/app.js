@@ -18,6 +18,7 @@ import {
 import { searchSongs, escapeHtml, getRandomSong } from './search.js';
 import { exportSinglePdf, exportFullSet, downloadBlob } from './pdf.js';
 import { highlightSyntax, syncHighlight, syncScroll, setupAutoComplete } from './editor.js';
+import { checkAuthStatus } from './auth.js';
 
 // DOM Elements
 const inputEl = document.getElementById('input');
@@ -42,9 +43,18 @@ let renderer = new ChartRenderer();
 let currentPage = 0;
 let currentSongPath = null;
 let selectedResultIndex = -1;
+let isAuthenticated = false;
 
 // Initialize
 async function init() {
+  // Check authentication status
+  isAuthenticated = await checkAuthStatus();
+
+  // Hide auth-required elements for public users
+  document.querySelectorAll('.auth-required').forEach(el => {
+    el.classList.toggle('hidden', !isAuthenticated);
+  });
+
   // Load library index
   await loadLibraryIndex();
   const libraryIndex = getLibraryIndex();
@@ -52,8 +62,15 @@ async function init() {
     ? `Search ${libraryIndex.length} songs...`
     : 'Library unavailable';
 
-  // Load initial song
-  await handleLoadSong('You Are My Refuge.txt');
+  // Load initial song (from pd/ for public users if available)
+  if (libraryIndex.length > 0) {
+    await handleLoadSong(libraryIndex[0].path);
+  } else {
+    // Show template for new users
+    inputEl.value = getNewSongTemplate();
+    syncHighlight(inputEl, highlightEl);
+    render();
+  }
   updateButtonStates();
 
   // Setup event listeners
@@ -85,7 +102,12 @@ function setupEventListeners() {
   pageFormatSelect.addEventListener('change', handlePageFormatChange);
   displayModeSelect.addEventListener('change', handleDisplayModeChange);
 
-  // Library management
+  // Upload/Download buttons (always visible)
+  document.getElementById('upload-btn').addEventListener('click', handleUploadClick);
+  document.getElementById('txt-file-input').addEventListener('change', handleTxtFileChange);
+  document.getElementById('download-txt-btn').addEventListener('click', handleDownloadTxt);
+
+  // Library management (auth-required)
   document.getElementById('new-btn').addEventListener('click', handleNew);
   document.getElementById('update-btn').addEventListener('click', handleUpdate);
   document.getElementById('delete-btn').addEventListener('click', handleDelete);
@@ -202,6 +224,40 @@ function handleDisplayModeChange() {
   currentPage = 0;
   renderer.renderPage(canvas, currentPage, previewContainer);
   updatePageControls();
+}
+
+// Upload .txt file for viewing (public feature)
+function handleUploadClick() {
+  document.getElementById('txt-file-input').click();
+}
+
+function handleTxtFileChange(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    inputEl.value = e.target.result;
+    currentSongPath = null; // Not saved to library
+    syncHighlight(inputEl, highlightEl);
+    render();
+    updateButtonStates();
+  };
+  reader.readAsText(file);
+
+  // Reset file input so same file can be selected again
+  event.target.value = '';
+}
+
+// Download current chart as .txt file
+function handleDownloadTxt() {
+  const content = inputEl.value;
+  if (!content.trim()) return;
+
+  const title = extractTitle(content) || 'chart';
+  const filename = title.replace(/[^a-zA-Z0-9\s]/g, '').trim() + '.txt';
+
+  downloadSong(content, filename);
 }
 
 // Library Management
@@ -421,7 +477,7 @@ async function handlePdfImport(e) {
   importPdfBtn.classList.add('loading');
 
   try {
-    const response = await fetch('api/import/pdf', {
+    const response = await fetch('/api/import/pdf', {
       method: 'POST',
       body: formData
     });

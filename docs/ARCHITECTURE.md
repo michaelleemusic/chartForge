@@ -16,7 +16,7 @@
 
 ## Features
 - **Side-by-side editor**: Live preview as you type
-- **Library search**: 677 searchable charts
+- **Library search**: 682 searchable charts (8 public domain, 674 authenticated)
 - **Key transposition**: Render in any key or Nashville Numbers
 - **PDF export**: Single PDF or Full Set (all 13 keys as ZIP)
 - **Unicode accidentals**: ♭ and ♯ display

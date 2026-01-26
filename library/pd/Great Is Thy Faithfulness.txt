@@ -1,0 +1,45 @@
+{title: Great Is Thy Faithfulness}
+{artist: Thomas O. Chisholm}
+{key: D}
+{tempo: 84}
+{time: 3/4}
+
+{section: Verse 1}
+[1]Great is Thy faith[1/3]fulness [4]O God my [1]Father
+[6m]There is no [5]shadow of [2]turning with [5]Thee
+[57]Thou changest [1/3]not Thy com[4]passions they [6m]fail not
+[2/#4]As Thou hast [1/5]been Thou for[2m9]ever [57]wilt [1]be
+
+{section: Chorus}
+[5]Great is Thy [4/1]faith[1]fulness 
+[6]Great is Thy [1/2]faith[2m7]fulness
+[5]Morning by [1/3]morning new [2]mercies [27/#4]I [5]see
+[57]All I have [1/3]needed Thy [4]hand hath pro[#4dim7]vided
+[27]Great is Thy [1/5]faithfulness [2m9]Lord un[4dim7/5]to [1]me
+
+{section: Verse 2}
+[1]Summer and win[1/3]ter and [4]springtime and [1]harvest
+[6m]Sun moon and [5]stars in their [2]courses a[5]bove
+[57]Join with all [1/3]nature in [4]manifold [6m]witness
+[2/#4]To Thy great [1/5]faithfulness [2m9]mercy and [57]love [1]
+
+{section: Chorus}
+[5]Great is Thy [4/1]faith[1]fulness 
+[6]Great is Thy [1/2]faith[2m7]fulness
+[5]Morning by [1/3]morning new [2]mercies [27/#4]I [5]see
+[57]All I have [1/3]needed Thy [4]hand hath pro[#4dim7]vided
+[27]Great is Thy [1/5]faithfulness [2m9]Lord un[4dim7/5]to [1]me
+
+{key_change: Eb}
+{section: Verse 3}
+[1]Pardon for sin [1/3]and a [4]peace that en[1]dureth
+[6m]Thy own dear presence to [2]cheer and to [5]guide
+[57]Strength for to[1/3]day and bright [4]hope for to[6m]morrow
+[2/#4]Blessings all [1/5]mine with ten [2m9]thousand [57]beside [1]
+
+{section: Chorus[2x]}
+[5]Great is Thy [4/1]faith[1]fulness 
+[6]Great is Thy [1/2]faith[2m7]fulness
+[5]Morning by [1/3]morning new [2]mercies [27/#4]I [5]see
+[57]All I have [1/3]needed Thy [4]hand hath pro[#4dim7]vided
+[27]Great is Thy [1/5]faithfulness [2m9]Lord un[4dim7/5]to [1]me

@@ -29,12 +29,15 @@ ssh-add ~/.ssh/dreamhost_proflee  # For production deployment
 **SSH User**: proflee_me
 **Web Root**: ~/proflee.me/chartforge/
 
+### Library Access Tiers
+
+- **Public**: `library/pd/` (public domain hymns) - visible to all visitors
+- **Full**: All 680+ songs - requires email authentication via `/ml` gateway
+
 ### Deploy to Production
 
-**Library Policy**: Only songs listed in `.deployinclude` are uploaded. The full library (680+ copyrighted charts) stays local.
-
 ```bash
-# Step 1: Sync app (excludes library .txt files and index.json)
+# Step 1: Sync app (includes pd/ public domain songs, excludes main library)
 rsync -avz --delete \
   --exclude='.git' \
   --exclude='node_modules' \
@@ -43,16 +46,15 @@ rsync -avz --delete \
   --exclude='library/trash' \
   --exclude='library/*.txt' \
   --exclude='library/index.json' \
+  --include='library/pd/' \
+  --include='library/pd/*.txt' \
   ./ proflee_me@pdx1-shared-a1-17.dreamhost.com:~/proflee.me/chartforge/
 
 # Step 1b: Remove any accidental .htaccess in web/ (causes 500 error)
 ssh proflee_me@pdx1-shared-a1-17.dreamhost.com "rm -f ~/proflee.me/chartforge/web/.htaccess"
 
-# Step 2: Upload public songs from .deployinclude
-while read -r song; do
-  [[ "$song" =~ ^#.*$ || -z "$song" ]] && continue
-  scp "library/$song" proflee_me@pdx1-shared-a1-17.dreamhost.com:~/proflee.me/chartforge/library/
-done < .deployinclude
+# Step 2: Upload full library for authenticated users
+rsync -avz library/*.txt proflee_me@pdx1-shared-a1-17.dreamhost.com:~/proflee.me/chartforge/library/
 
 # Step 3: Fix permissions
 ssh proflee_me@pdx1-shared-a1-17.dreamhost.com "chmod -R 755 ~/proflee.me/chartforge/ && find ~/proflee.me/chartforge/ -type f -exec chmod 644 {} \;"
@@ -64,7 +66,8 @@ curl -X POST https://proflee.me/chartforge/api/rebuild-index
 ### URL Structure
 
 - **App URL**: https://proflee.me/chartforge/ (served via .htaccess rewrite to web/index.html)
-- **API Endpoints**: /api/library/* routed to web/index.php
+- **Auth Gateway**: https://proflee.me/chartforge/ml (email verification for full library)
+- **API Endpoints**: /api/library, /api/auth, /api/auth/status routed to web/index.php
 
 ## Project Structure
 

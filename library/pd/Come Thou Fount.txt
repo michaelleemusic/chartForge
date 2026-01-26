@@ -1,0 +1,35 @@
+{title: Come Thou Fount of Every Blessing}
+{artist: Robert Robinson}
+{key: D}
+{tempo: 104}
+{time: 3/4}
+
+{section: Verse 1}
+[1]Come Thou fount of every blessing
+[4]Tune my heart to [1]sing Thy grace
+[1]Streams of mercy never ceasing
+[5]Call for songs of loudest [1]praise
+[4]Teach me some me[1]lodious sonnet
+[4]Sung by flaming [1]tongues a[5]bove
+[1]Praise the mount I'm [4]fixed up[1]on it
+[4]Mount of [5]Thy redeeming [1]love
+
+{section: Verse 2}
+[1]Here I raise my Ebenezer
+[4]Hither by Thy [1]help I've come
+[1]And I hope by Thy good pleasure
+[5]Safely to arrive at [1]home
+[4]Jesus sought me [1]when a stranger
+[4]Wandering from the [1]fold of [5]God
+[1]He to rescue [4]me from [1]danger
+[4]Inter[5]posed His precious [1]blood
+
+{section: Verse 3}
+[1]O to grace how great a debtor
+[4]Daily I'm con[1]strained to be
+[1]Let Thy goodness like a fetter
+[5]Bind my wandering heart to [1]Thee
+[4]Prone to wander [1]Lord I feel it
+[4]Prone to leave the [1]God I [5]love
+[1]Here's my heart O [4]take and [1]seal it
+[4]Seal it [5]for Thy courts a[1]bove

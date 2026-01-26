@@ -10,6 +10,9 @@ $ROOT = dirname(__DIR__);
 $LIBRARY_DIR = $ROOT . '/library';
 $TRASH_DIR = $LIBRARY_DIR . '/trash';
 
+// Allowed emails for full library access
+$ALLOWED_EMAILS = ['michael@michaelleemusic.com', 'mlee@apu.edu'];
+
 // Ensure trash directory exists
 if (!is_dir($TRASH_DIR)) {
     mkdir($TRASH_DIR, 0755, true);
@@ -18,6 +21,16 @@ if (!is_dir($TRASH_DIR)) {
 // Get request info
 $method = $_SERVER['REQUEST_METHOD'];
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
+// Check auth cookie
+function isAuthenticated() {
+    global $ALLOWED_EMAILS;
+    if (isset($_COOKIE['cf_auth'])) {
+        $email = base64_decode($_COOKIE['cf_auth']);
+        return in_array($email, $ALLOWED_EMAILS);
+    }
+    return false;
+}
 
 // Normalize URI: extract the API/resource path from the full URI
 // Handles both /api/... and /chartforge/api/... patterns
@@ -101,6 +114,49 @@ function rebuildIndex($libraryDir) {
 
 // API Routes
 
+// POST /api/auth - Set auth cookie
+if ($uri === '/api/auth' && $method === 'POST') {
+    $data = json_decode(file_get_contents('php://input'), true);
+    $email = strtolower(trim($data['email'] ?? ''));
+
+    if (in_array($email, $ALLOWED_EMAILS)) {
+        // Set persistent cookie (30 days)
+        setcookie('cf_auth', base64_encode($email), [
+            'expires' => time() + (30 * 24 * 60 * 60),
+            'path' => '/',
+            'httponly' => true,
+            'samesite' => 'Strict'
+        ]);
+        jsonResponse(['success' => true]);
+    } else {
+        jsonResponse(['success' => false, 'error' => 'Email not authorized'], 403);
+    }
+}
+
+// GET /api/auth/status - Check if authenticated
+if ($uri === '/api/auth/status' && $method === 'GET') {
+    jsonResponse(['authenticated' => isAuthenticated()]);
+}
+
+// GET /api/library - Return filtered library index
+if ($uri === '/api/library' && $method === 'GET') {
+    $indexPath = $LIBRARY_DIR . '/index.json';
+    if (!file_exists($indexPath)) {
+        jsonResponse([]);
+    }
+    $index = json_decode(file_get_contents($indexPath), true);
+
+    if (!isAuthenticated()) {
+        // Filter to pd/ songs only for public users
+        $index = array_filter($index, function($song) {
+            return strpos($song['path'], 'pd/') === 0;
+        });
+        $index = array_values($index);
+    }
+
+    jsonResponse($index);
+}
+
 // Rebuild index endpoint
 if ($uri === '/api/rebuild-index' && $method === 'POST') {
     $count = rebuildIndex($LIBRARY_DIR);
@@ -114,6 +170,11 @@ if (strpos($uri, '/api/library/') === 0) {
     // Security: prevent path traversal
     if (strpos(realpath(dirname($filepath)), realpath($LIBRARY_DIR)) !== 0 || strpos($filename, '..') !== false) {
         textResponse('Forbidden', 403);
+    }
+
+    // Protect write operations - require authentication
+    if (in_array($method, ['PUT', 'POST', 'DELETE']) && !isAuthenticated()) {
+        jsonResponse(['error' => 'Authentication required'], 401);
     }
 
     // PUT/POST - Save song
@@ -149,6 +210,11 @@ if (strpos($uri, '/api/library/') === 0) {
 
 // PDF Import API
 if ($uri === '/api/import/pdf' && $method === 'POST') {
+    // Protect PDF import - require authentication
+    if (!isAuthenticated()) {
+        jsonResponse(['error' => 'Authentication required'], 401);
+    }
+
     if (!isset($_FILES['pdf']) || $_FILES['pdf']['error'] !== UPLOAD_ERR_OK) {
         textResponse('No PDF file uploaded or upload error', 400);
     }
@@ -194,6 +260,19 @@ if ($uri === '/api/import/pdf' && $method === 'POST') {
 // Static file serving
 if ($uri === '/' || $uri === '') {
     $uri = '/web/index.html';
+}
+
+// Route /ml to gateway page
+if ($uri === '/ml') {
+    $uri = '/web/ml.html';
+}
+
+// Route static assets to web/ folder (for PHP built-in server)
+if ($uri === '/styles.css') {
+    $uri = '/web/styles.css';
+}
+if (preg_match('#^/js/(.+)$#', $uri, $matches)) {
+    $uri = '/web/js/' . $matches[1];
 }
 
 // URL decode for filenames with spaces

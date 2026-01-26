@@ -1,0 +1,35 @@
+{title: What A Friend We Have In Jesus}
+{artist: Joseph Scriven}
+{key: F}
+{tempo: 84}
+{time: 4/4}
+
+{section: Verse 1}
+[1]What a friend we have in [4]Jesus
+[1]All our sins and griefs to [5]bear
+[1]What a privilege to [4]carry
+[1]Every[5]thing to God in [1]prayer
+[4]O what peace we often [1]forfeit
+[4]O what needless pain we [5]bear
+[1]All because we do not [4]carry
+[1]Every[5]thing to God in [1]prayer
+
+{section: Verse 2}
+[1]Have we trials and temp[4]tations
+[1]Is there trouble any[5]where
+[1]We should never be dis[4]couraged
+[1]Take it [5]to the Lord in [1]prayer
+[4]Can we find a friend so [1]faithful
+[4]Who will all our sorrows [5]share
+[1]Jesus knows our every [4]weakness
+[1]Take it [5]to the Lord in [1]prayer
+
+{section: Verse 3}
+[1]Are we weak and heavy [4]laden
+[1]Cumbered with a load of [5]care
+[1]Precious Savior still our [4]refuge
+[1]Take it [5]to the Lord in [1]prayer
+[4]Do thy friends despise for[1]sake thee
+[4]Take it to the Lord in [5]prayer
+[1]In His arms He'll take and [4]shield thee
+[1]Thou wilt [5]find a solace [1]there

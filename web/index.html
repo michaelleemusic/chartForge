@@ -25,12 +25,17 @@
         </div>
         <button class="toolbar-btn" id="random-btn">Random</button>
         <div class="toolbar-divider"></div>
-        <button class="toolbar-btn" id="new-btn">New</button>
-        <button class="toolbar-btn" id="update-btn">Update</button>
-        <button class="toolbar-btn toolbar-btn-danger" id="delete-btn">Delete</button>
-        <div class="toolbar-divider"></div>
-        <button class="toolbar-btn" id="import-pdf-btn">Import PDF</button>
-        <button class="toolbar-btn" id="convert-numbers-btn">To Numbers</button>
+        <!-- Public: Upload/Download .txt files -->
+        <button class="toolbar-btn" id="upload-btn">Upload</button>
+        <input type="file" id="txt-file-input" accept=".txt" hidden>
+        <button class="toolbar-btn" id="download-txt-btn">Download</button>
+        <!-- Auth required: Library management -->
+        <button class="toolbar-btn auth-required" id="new-btn">New</button>
+        <button class="toolbar-btn auth-required" id="update-btn">Update</button>
+        <button class="toolbar-btn toolbar-btn-danger auth-required" id="delete-btn">Delete</button>
+        <div class="toolbar-divider auth-required"></div>
+        <button class="toolbar-btn auth-required" id="import-pdf-btn">Import PDF</button>
+        <button class="toolbar-btn auth-required" id="convert-numbers-btn">To Numbers</button>
         <input type="file" id="pdf-file-input" accept=".pdf" hidden>
       </div>
       <div class="editor-content">

@@ -1,0 +1,29 @@
+{title: Be Thou My Vision}
+{artist: Mary E. Byrne, Eleanor H. Hull}
+{key: D}
+{tempo: 96}
+{time: 3/4}
+
+{section: Verse 1}
+Be [1]Thou my vision O [4]Lord of my [1]heart
+[5]Naught be all else to me [2m]save that Thou [1]art
+[4]Thou my best thought by [1]day or by [5]night
+[1]Waking or sleeping Thy [4]presence my [1]light
+
+{section: Verse 2}
+Be [1]Thou my wisdom and [4]Thou my true [1]word
+[5]I ever with Thee and [2m]Thou with me [1]Lord
+[4]Thou my great Father I [1]Thy true [5]son
+[1]Thou in me dwelling and [4]I with Thee [1]one
+
+{section: Verse 3}
+[1]Riches I heed not nor [4]man's empty [1]praise
+[5]Thou mine inheritance [2m]now and al[1]ways
+[4]Thou and Thou only [1]first in my [5]heart
+[1]High King of heaven my [4]treasure Thou [1]art
+
+{section: Verse 4}
+[1]High King of heaven my [4]victory [1]won
+[5]May I reach heaven's joys [2m]O bright heaven's [1]sun
+[4]Heart of my own heart what[1]ever be[5]fall
+[1]Still be my vision O [4]Ruler of [1]all

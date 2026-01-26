@@ -1,0 +1,29 @@
+{title: When I Survey The Wondrous Cross}
+{artist: Isaac Watts}
+{key: D}
+{tempo: 76}
+{time: 4/4}
+
+{section: Verse 1}
+When [1]I sur[4]vey the [1]wondrous [5]cross
+On [6m]which the [4]Prince of [1]glory [5]died
+My [1]richest [4]gain I [1]count but [5]loss
+And [6m]pour con[4]tempt on [5]all my [1]pride
+
+{section: Verse 2}
+For[1]bid it [4]Lord that [1]I should [5]boast
+Save [6m]in the [4]death of [1]Christ my [5]God
+All [1]the vain [4]things that [1]charm me [5]most
+I [6m]sacri[4]fice them [5]to His [1]blood
+
+{section: Verse 3}
+[1]See from His [4]head His [1]hands His [5]feet
+[6m]Sorrow and [4]love flow [1]mingled [5]down
+Did [1]e'er such [4]love and [1]sorrow [5]meet
+Or [6m]thorns com[4]pose so [5]rich a [1]crown
+
+{section: Verse 4}
+Were [1]the whole [4]realm of [1]nature [5]mine
+That [6m]were a [4]present [1]far too [5]small
+Love [1]so a[4]mazing [1]so di[5]vine
+De[6m]mands my [4]soul my [5]life my [1]all

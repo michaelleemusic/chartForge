@@ -1,0 +1,49 @@
+{title: A Mighty Fortress Is Our God}
+{artist: Martin Luther}
+{key: C}
+{tempo: 108}
+{time: 4/4}
+
+{section: Verse 1}
+[1]A mighty fortress [4]is our [1]God
+A [4]bulwark [1]never [5]fail[1]ing
+Our [1]helper He a[4]mid the [1]flood
+Of [4]mortal [1]ills pre[5]vail[1]ing
+For [6m]still our ancient [5]foe
+Doth [6m]seek to work us [5]woe
+His [6m]craft and power are [3m]great
+And [6m]armed with cruel [5]hate
+On [4]earth is [5]not his [1]equal
+
+{section: Verse 2}
+[1]Did we in our own [4]strength con[1]fide
+Our [4]striving [1]would be [5]los[1]ing
+Were [1]not the right man [4]on our [1]side
+The [4]man of [1]God's own [5]choos[1]ing
+[6m]Dost ask who that may [5]be
+[6m]Christ Jesus it is [5]He
+[6m]Lord Sabaoth His [3m]name
+From [6m]age to age the [5]same
+And [4]He must [5]win the [1]battle
+
+{section: Verse 3}
+[1]And though this world with [4]devils [1]filled
+Should [4]threaten [1]to un[5]do [1]us
+We [1]will not fear for [4]God hath [1]willed
+His [4]truth to [1]triumph [5]through [1]us
+The [6m]prince of darkness [5]grim
+We [6m]tremble not for [5]him
+His [6m]rage we can en[3m]dure
+For [6m]lo his doom is [5]sure
+One [4]little [5]word shall [1]fell him
+
+{section: Verse 4}
+[1]That word above all [4]earthly [1]powers
+No [4]thanks to [1]them a[5]bid[1]eth
+The [1]Spirit and the [4]gifts are [1]ours
+Through [4]Him who [1]with us [5]sid[1]eth
+Let [6m]goods and kindred [5]go
+This [6m]mortal life al[5]so
+The [6m]body they may [3m]kill
+God's [6m]truth abideth [5]still
+His [4]kingdom [5]is for[1]ever

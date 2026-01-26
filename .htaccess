@@ -3,6 +3,9 @@ RewriteEngine On
 # Route root to web/index.html
 RewriteRule ^$ web/index.html [L]
 
+# Route /ml gateway page
+RewriteRule ^ml$ web/ml.html [L]
+
 # Route static assets (css, js) to web/ folder
 RewriteRule ^(styles\.css|app\.js)$ web/$1 [L]
 RewriteRule ^js/(.*)$ web/js/$1 [L]
